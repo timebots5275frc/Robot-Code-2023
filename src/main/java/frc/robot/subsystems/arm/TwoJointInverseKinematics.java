@@ -10,7 +10,6 @@ public class TwoJointInverseKinematics {
         secondJointLength = secondLength;
     }
 
-
     public double solveFirstJoint(double targetX, double targetY)
     {
         double distance = distance(0, 0, targetX, targetY);
@@ -32,4 +31,12 @@ public class TwoJointInverseKinematics {
     {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
+
+    public double[] normalizeVector(double x, double y)
+    {
+        double distance = distance(0, 0, x, y);
+        return new double[] {x / distance, y / distance};
+    }
+
+    public double totalDistance() { return firstJointLength + secondJointLength; }
 }
