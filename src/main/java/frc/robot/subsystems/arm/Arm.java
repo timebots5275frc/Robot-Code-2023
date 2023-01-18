@@ -51,9 +51,8 @@ public class Arm extends SubsystemBase {
     secondArmAngle = kinematics.solveSecondJoint(xValue, yValue);
   }
 
-  public void movePoint(double joystickValue, double joystickValue2) {
-    xValue += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    yValue += joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+  public void runMovePoint(double joystickValue, double joystickValue2) {
+    
   }
 
   public void moveArm() {
