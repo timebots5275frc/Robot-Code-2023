@@ -43,7 +43,7 @@ public class Arm extends SubsystemBase {
     secondArmEncoder.setPositionConversionFactor(Constants.ArmConstants.ROTATIONS_TO_ANGLE);
     firstArmPID = firstArmController.getPIDController();
     secondArmPID = secondArmController.getPIDController();
-    TwoJointInverseKinematics = new TwoJointInverseKinematics();
+    kinematics = new TwoJointInverseKinematics(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, Constants.ArmConstants.ARM_SECOND_PART_LENGTH);
   }
 
   private void calculate() {
