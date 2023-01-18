@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.arm;
 
+import com.fasterxml.jackson.databind.introspect.AnnotationCollector.TwoAnnotations;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -32,6 +33,7 @@ public class Arm extends SubsystemBase {
   private double distance;
   private double firstArmAngle;
   private double secondArmAngle;
+  private TwoJointInverseKinematics kinematics;
   public Arm() {
     firstArmController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
     secondArmController = new CANSparkMax(Constants.ArmConstants.SECOND_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -41,12 +43,12 @@ public class Arm extends SubsystemBase {
     secondArmEncoder.setPositionConversionFactor(Constants.ArmConstants.ROTATIONS_TO_ANGLE);
     firstArmPID = firstArmController.getPIDController();
     secondArmPID = secondArmController.getPIDController();
+    TwoJointInverseKinematics = new TwoJointInverseKinematics();
   }
 
   private void calculate() {
-    distance = Math.sqrt(Math.pow(xValue, 2) + Math.pow(yValue, 2));
-    firstArmAngle = Math.acos((Math.pow(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, 2) + Math.pow(distance, 2) - Math.pow(Constants.ArmConstants.ARM_SECOND_PART_LENGTH, 2)) / (2 * Constants.ArmConstants.ARM_FIRST_PART_LENGTH * distance));
-    secondArmAngle = Math.acos((Math.pow(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, 2) + Math.pow(Constants.ArmConstants.ARM_SECOND_PART_LENGTH, 2) - Math.pow(distance, 2)) / (2 * Constants.ArmConstants.ARM_FIRST_PART_LENGTH * Constants.ArmConstants.ARM_SECOND_PART_LENGTH));
+    firstArmAngle = kinematics.solveFirstJoint(xValue, yValue);
+    secondArmAngle = kinematics.solveSecondJoint(xValue, yValue);
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
