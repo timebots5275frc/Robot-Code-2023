@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
@@ -21,6 +22,8 @@ public class Arm extends SubsystemBase {
   private RelativeEncoder secondArmEncoder;
   private SparkMaxPIDController firstArmPID;
   private SparkMaxPIDController secondArmPID;
+
+  Vector test;
 
   private double f_kP, f_kI, f_kD, f_kIz, f_kFF, f_kMaxOutput, f_kMinOutput, f_maxRPM, f_smartMAXVelocity,
   f_smartMAXAcc, f_allowedErr;
@@ -54,6 +57,15 @@ public class Arm extends SubsystemBase {
   public void movePoint(double joystickValue, double joystickValue2) {
     xValue += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     yValue += joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+
+
+    // Sus Clamping
+    double[] normalizedVector = kinematics.normalizeVector(xValue, yValue);
+    normalizedVector[0] = normalizedVector[0] < 0 ? 0 : normalizedVector[0];
+    normalizedVector[1] = normalizedVector[1] < 0 ? 0 : normalizedVector[1];
+
+    xValue = normalizedVector[0];
+    yValue = normalizedVector[1];
   }
 
   public void moveArm() {
