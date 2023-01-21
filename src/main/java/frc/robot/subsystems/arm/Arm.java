@@ -34,7 +34,7 @@ public class Arm extends SubsystemBase {
   private double xValue;
   private double yValue;//y
   private double distance;
-  private double firstArmAngle;
+  private double firstArmAngle;// cum
   private double secondArmAngle;
   private TwoJointInverseKinematics kinematics;
   public Arm() {

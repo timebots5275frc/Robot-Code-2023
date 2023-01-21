@@ -13,7 +13,7 @@ public class TwoJointInverseKinematics {
     public double solveFirstJoint(double targetX, double targetY)
     {
         double distance = distance(0, 0, targetX, targetY);
-        return lawOfCosines(firstJointLength, distance, secondJointLength);
+        return lawOfCosines(firstJointLength, distance, secondJointLength) + Math.atan(targetY/targetX);
     }
 
     public double solveSecondJoint(double targetX, double targetY)
