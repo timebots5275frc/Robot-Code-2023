@@ -134,12 +134,6 @@ public class Constants {
         public static final double ROTATIONS_TO_ANGLE = 0;
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
-
+        public static final double RAD_TO_DEG_RATIO = 57.2957795131;
     }
-
-
-
-
-
-    
 }

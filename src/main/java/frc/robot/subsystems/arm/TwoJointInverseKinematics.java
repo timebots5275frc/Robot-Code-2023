@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import frc.robot.constants.Constants;
+
 public class TwoJointInverseKinematics {
     private double firstJointLength;
     private double secondJointLength;
@@ -13,13 +15,13 @@ public class TwoJointInverseKinematics {
     public double solveFirstJoint(double targetX, double targetY)
     {
         double distance = distance(0, 0, targetX, targetY);
-        return lawOfCosines(firstJointLength, distance, secondJointLength) + Math.atan(targetY/targetX);
+        return (Math.atan(targetY/targetX) - lawOfCosines(firstJointLength, distance, secondJointLength)) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
     }
 
     public double solveSecondJoint(double targetX, double targetY)
     {
         double distance = distance(0, 0, targetX, targetY);
-        return lawOfCosines(firstJointLength, secondJointLength, distance);
+        return lawOfCosines(firstJointLength, secondJointLength, distance) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
     }
 
     public double lawOfCosines(double leg1, double leg2, double hypotenuse)
