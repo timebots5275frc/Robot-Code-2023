@@ -49,7 +49,7 @@ public class Arm extends SubsystemBase {
     kinematics = new TwoJointInverseKinematics(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, Constants.ArmConstants.ARM_SECOND_PART_LENGTH);
   }
 
-  private void calculate() {
+  public void calculate() {
     firstArmAngle = kinematics.solveFirstJoint(xValue, yValue);
     secondArmAngle = kinematics.solveSecondJoint(xValue, yValue);
   }
