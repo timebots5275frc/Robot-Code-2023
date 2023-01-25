@@ -7,7 +7,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.teleop.MoveArm;
 import frc.robot.commands.teleop.TeleopJoystickDrive;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 /**
@@ -18,21 +20,24 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class RobotContainer {
 
-  //Subsystems
+  // Subsystems
   Drivetrain drivetrain = new Drivetrain();
+  Arm arm = new Arm();
 
   //Joystic
   Joystick driveJoystick = new Joystick(0);
   Joystick armJoystick = new Joystick(1);
 
   //Teleop Commands
-  TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true)
+  TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true);
+  MoveArm armWhenMove = new MoveArm(arm, armJoystick);
 
   //Auto commands
 
 
   public RobotContainer() {
     drivetrain.setDefaultCommand(drive);
+    arm.setDefaultCommand(armWhenMove);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -51,7 +56,6 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    driveJoystick.getRawButton(1).whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -61,6 +65,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new Command;
+    return new Command();
   }
 }
