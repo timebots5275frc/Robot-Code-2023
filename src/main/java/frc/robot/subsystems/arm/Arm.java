@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.sensors.CANCoder;
+import com.fasterxml.jackson.databind.introspect.AnnotationCollector.TwoAnnotations;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -20,12 +20,8 @@ public class Arm extends SubsystemBase {
   private CANSparkMax secondArmController;
   private RelativeEncoder firstArmEncoder;
   private RelativeEncoder secondArmEncoder;
-  private CANCoder firstArmAbsoluteEncoder;
-  private CANCoder secondArmAbsoluteEncoder;
   private SparkMaxPIDController firstArmPID;
   private SparkMaxPIDController secondArmPID;
-
-  Vector test;
 
   private double f_kP, f_kI, f_kD, f_kIz, f_kFF, f_kMaxOutput, f_kMinOutput, f_maxRPM, f_smartMAXVelocity,
   f_smartMAXAcc, f_allowedErr;
@@ -36,7 +32,7 @@ public class Arm extends SubsystemBase {
   private double xValue;
   private double yValue;//y
   private double distance;
-  private double firstArmAngle;// cum
+  private double firstArmAngle;
   private double secondArmAngle;
   private TwoJointInverseKinematics kinematics;
   public Arm() {
@@ -49,30 +45,61 @@ public class Arm extends SubsystemBase {
     firstArmPID = firstArmController.getPIDController();
     secondArmPID = secondArmController.getPIDController();
     kinematics = new TwoJointInverseKinematics(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, Constants.ArmConstants.ARM_SECOND_PART_LENGTH);
+
+    //PID Values
+    f_kP = Constants.ArmConstants.kP;
+    f_kI = Constants.ArmConstants.kI;
+    f_kD = Constants.ArmConstants.kD;
+    f_kIz = Constants.ArmConstants.kIz;
+    f_kFF = Constants.ArmConstants.kFF;
+    f_kMaxOutput = Constants.ArmConstants.kMaxOutput;
+    f_kMinOutput = Constants.ArmConstants.kMinOutput;
+    f_maxRPM = Constants.ArmConstants.maxRPM;
+    f_smartMAXVelocity = Constants.ArmConstants.smartMAXVelocity;
+    f_smartMAXAcc = Constants.ArmConstants.smartMAXAcc;
+    f_allowedErr = Constants.ArmConstants.allowedErr;
+
+    s_kP = Constants.ArmConstants.kP;
+    s_kI = Constants.ArmConstants.kI;
+    s_kD = Constants.ArmConstants.kD;
+    s_kIz = Constants.ArmConstants.kIz;
+    s_kFF = Constants.ArmConstants.kFF;
+    s_kMaxOutput = Constants.ArmConstants.kMaxOutput;
+    s_kMinOutput = Constants.ArmConstants.kMinOutput;
+    s_maxRPM = Constants.ArmConstants.maxRPM;
+    s_smartMAXVelocity = Constants.ArmConstants.smartMAXVelocity;
+    s_smartMAXAcc = Constants.ArmConstants.smartMAXAcc;
+    s_allowedErr = Constants.ArmConstants.allowedErr;
   }
 
-  public void calculate() {
+  private void calculate() {
     firstArmAngle = kinematics.solveFirstJoint(xValue, yValue);
     secondArmAngle = kinematics.solveSecondJoint(xValue, yValue);
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
     xValue += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    yValue += joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    yValue += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
 
 
-    // Sus Clamping
+    // Sus Clamping Ahhhhhh
     double[] normalizedVector = kinematics.normalizeVector(xValue, yValue);
     normalizedVector[0] = normalizedVector[0] < 0 ? 0 : normalizedVector[0];
     normalizedVector[1] = normalizedVector[1] < 0 ? 0 : normalizedVector[1];
 
     xValue = normalizedVector[0];
     yValue = normalizedVector[1];
+    this.getArmAngles();
   }
 
   public void moveArm() {
-    firstArmEncoder.setPosition(firstArmAbsoluteEncoder.getAbsolutePosition() * Constants.ArmConstants.FIRST_JOINT_ANGLE_TO_ROTATIONS_VALUE);
-    secondArmEncoder.setPosition(secondArmAbsoluteEncoder.getAbsolutePosition() * Constants.ArmConstants.SECOND_JOINT_ANGLE_TO_ROTATIONS_VALUE);
+    
+  }
+
+
+  public void getArmAngles() {
+    this.calculate();
+
   }
 
 
