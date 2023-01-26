@@ -15,7 +15,12 @@ public class TwoJointInverseKinematics {
     public double solveFirstJoint(double targetX, double targetY)
     {
         double distance = distance(0, 0, targetX, targetY);
-        return (Math.atan(targetY/targetX) - lawOfCosines(firstJointLength, distance, secondJointLength)) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
+        if (lawOfCosines(firstJointLength, distance, secondJointLength) < 0) {
+            return (Math.atan(targetY/targetX) - lawOfCosines(firstJointLength, distance, secondJointLength)) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
+        } else {
+            return (Math.atan(targetY/targetX) + lawOfCosines(firstJointLength, distance, secondJointLength)) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
+        }
+        
     }
 
     public double solveSecondJoint(double targetX, double targetY)
