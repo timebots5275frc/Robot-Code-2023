@@ -40,8 +40,8 @@ public class Arm extends SubsystemBase {
     secondArmController = new CANSparkMax(Constants.ArmConstants.SECOND_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
     firstArmEncoder = firstArmController.getEncoder();
     secondArmEncoder = secondArmController.getEncoder();
-    firstArmEncoder.setPositionConversionFactor(Constants.ArmConstants.ROTATIONS_TO_ANGLE);
-    secondArmEncoder.setPositionConversionFactor(Constants.ArmConstants.ROTATIONS_TO_ANGLE);
+    firstArmEncoder.setPositionConversionFactor(Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO);
+    secondArmEncoder.setPositionConversionFactor(Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO);
     firstArmPID = firstArmController.getPIDController();
     secondArmPID = secondArmController.getPIDController();
     kinematics = new TwoJointInverseKinematics(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, Constants.ArmConstants.ARM_SECOND_PART_LENGTH);
