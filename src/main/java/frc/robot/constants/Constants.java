@@ -129,10 +129,11 @@ public class Constants {
         public static final double ARM_FIRST_PART_LENGTH = 40;
         public static final double ARM_SECOND_PART_LENGTH = 40;
         public static final double POINT_MOVEMENT_FACTOR = 0.02;
-        public static final double ROTATIONS_TO_ANGLE = 0;
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
         public static final double RAD_TO_DEG_RATIO = 57.2957795;
+        public static final double FIRST_ARM_MOTOR_ROTATION_RATIO = 0;
+        public static final double SECOND_ARM_MOTOR_ROTATION_RATIO = 0;
 
         //PID loop
         public static final double kP = 0;
@@ -147,10 +148,4 @@ public class Constants {
         public static final double smartMAXAcc = 0;
         public static final double allowedErr = 0;
     }
-
-
-
-
-
-    
 }
