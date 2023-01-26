@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems.arm;
 
-import com.fasterxml.jackson.databind.introspect.AnnotationCollector.TwoAnnotations;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -20,6 +20,8 @@ public class Arm extends SubsystemBase {
   private CANSparkMax secondArmController;
   private RelativeEncoder firstArmEncoder;
   private RelativeEncoder secondArmEncoder;
+  private CANCoder firstArmAbsoluteEncoder;
+  private CANCoder secondArmAbsoluteEncoder;
   private SparkMaxPIDController firstArmPID;
   private SparkMaxPIDController secondArmPID;
 
@@ -69,7 +71,8 @@ public class Arm extends SubsystemBase {
   }
 
   public void moveArm() {
-    
+    firstArmEncoder.setPosition(firstArmAbsoluteEncoder.getAbsolutePosition() * Constants.ArmConstants.FIRST_JOINT_ANGLE_TO_ROTATIONS_VALUE);
+    secondArmEncoder.setPosition(secondArmAbsoluteEncoder.getAbsolutePosition() * Constants.ArmConstants.SECOND_JOINT_ANGLE_TO_ROTATIONS_VALUE);
   }
 
 
