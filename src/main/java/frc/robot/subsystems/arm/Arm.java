@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
 public class Arm extends SubsystemBase {
-  /** Creates a new Arm. */
   private CANSparkMax firstArmController;
   private CANSparkMax secondArmController;
   private RelativeEncoder firstArmEncoder;
@@ -25,20 +24,19 @@ public class Arm extends SubsystemBase {
   private SparkMaxPIDController firstArmPID;
   private SparkMaxPIDController secondArmPID;
 
-  Vector test;
-
   private double f_kP, f_kI, f_kD, f_kIz, f_kFF, f_kMaxOutput, f_kMinOutput, f_maxRPM, f_smartMAXVelocity,
   f_smartMAXAcc, f_allowedErr;
 
   private double s_kP, s_kI, s_kD, s_kIz, s_kFF, s_kMaxOutput, s_kMinOutput, s_maxRPM, s_smartMAXVelocity,
   s_smartMAXAcc, s_allowedErr;
   
-  private double xValue;
+  private double xValue;//x
   private double yValue;//y
   private double distance;
-  private double firstArmAngle;// cum
+  private double firstArmAngle;
   private double secondArmAngle;
   private TwoJointInverseKinematics kinematics;
+
   public Arm() {
     firstArmController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
     secondArmController = new CANSparkMax(Constants.ArmConstants.SECOND_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);

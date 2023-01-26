@@ -11,8 +11,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import javax.swing.text.Position;
-
 import com.ctre.phoenix.sensors.*;
 import frc.robot.constants.Constants.DriveConstants;
 

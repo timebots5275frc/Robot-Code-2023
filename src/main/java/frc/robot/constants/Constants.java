@@ -3,9 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.constants;
-
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
@@ -18,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * It is advised to statically import this class (or one of its inner classes)
  * wherever the constants are needed, to reduce verbosity.
  */
+
 public class Constants {
     /**
      * 
@@ -33,7 +31,7 @@ public class Constants {
     }
 
     /**
-     * @Title DrveConstants
+     * @Title DriveConstants
      */
     public static final class DriveConstants {
 
