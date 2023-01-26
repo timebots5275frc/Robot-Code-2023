@@ -9,14 +9,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 
 public class MoveArm extends CommandBase {
+  /** Creates a new MoveArm. */
   Arm arm;
   Joystick joystick;
-
-  // Balls
-  public MoveArm(Arm arm, Joystick stick)
-  {
-    this.arm = arm;
-    joystick = stick;
+  public MoveArm(Arm _arm, Joystick _joystick) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    arm = _arm;
+    joystick = _joystick;
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +26,6 @@ public class MoveArm extends CommandBase {
   @Override
   public void execute() {
     arm.movePoint(joystick.getX(), joystick.getY());
-    arm.calculate();
     arm.moveArm();
   }
 

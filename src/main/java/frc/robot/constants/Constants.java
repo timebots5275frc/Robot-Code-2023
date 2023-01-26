@@ -126,14 +126,31 @@ public class Constants {
     public static final class ArmConstants {
         public static final int FIRST_ARM_MOTOR_ID = 0;
         public static final int SECOND_ARM_MOTOR_ID = 0;
-        public static final double ARM_FIRST_PART_LENGTH = 0;
-        public static final double ARM_SECOND_PART_LENGTH = 0;
-        public static final double POINT_MOVEMENT_FACTOR = 0;
+        public static final double ARM_FIRST_PART_LENGTH = 40;
+        public static final double ARM_SECOND_PART_LENGTH = 40;
+        public static final double POINT_MOVEMENT_FACTOR = 0.02;
         public static final double ROTATIONS_TO_ANGLE = 0;
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
-        public static final double RAD_TO_DEG_RATIO = 57.2957795131;
-        public static final double FIRST_JOINT_ANGLE_TO_ROTATIONS_VALUE = 0;
-        public static final double SECOND_JOINT_ANGLE_TO_ROTATIONS_VALUE = 0;
+        public static final double RAD_TO_DEG_RATIO = 57.2957795;
+
+        //PID loop
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kIz = 0;
+        public static final double kFF = 0;
+        public static final double kMaxOutput = 0;
+        public static final double kMinOutput = 0;
+        public static final double maxRPM = 0;
+        public static final double smartMAXVelocity = 0;
+        public static final double smartMAXAcc = 0;
+        public static final double allowedErr = 0;
     }
+
+
+
+
+
+    
 }
