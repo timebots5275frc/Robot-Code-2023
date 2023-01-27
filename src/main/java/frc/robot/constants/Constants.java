@@ -134,18 +134,61 @@ public class Constants {
         public static final double RAD_TO_DEG_RATIO = 57.2957795;
         public static final double FIRST_ARM_MOTOR_ROTATION_RATIO = 0;
         public static final double SECOND_ARM_MOTOR_ROTATION_RATIO = 0;
+        public static final double sg_smartMAXVelocity = 0;
+        public static final double sg_smartMAXAcc = 0;
 
+        //PID values first arm against gravity
+        public static final double f_kP = 0;
+        public static final double f_kI = 0;
+        public static final double f_kD = 0;
+        public static final double f_kIz = 0;
+        public static final double f_kFF = 0;
+        public static final double f_kMaxOutput = 0;
+        public static final double f_kMinOutput = 0;
+        public static final double f_maxRPM = 0;
+        public static final double f_smartMAXVelocity = 0;
+        public static final double f_smartMAXAcc = 0;
+        public static final double f_allowedErr = 0;
+
+        //PID values first arm wih gravity
+        public static final double fg_kP = 0;
+        public static final double fg_kI = 0;
+        public static final double fg_kD = 0;
+        public static final double fg_kIz = 0;
+        public static final double fg_kFF = 0;
+        public static final double fg_kMaxOutput = 0;
+        public static final double fg_kMinOutput = 0;
+        public static final double fg_maxRPM = 0;
+        public static final double fg_smartMAXVelocity = 0;
+        public static final double fg_allowedErr = 0;
+        public static final double fg_smartMAXAcc = 0;
+
+        //PID values first arm against gravity
+        public static final double s_kP = 0;
+        public static final double s_kI = 0;
+        public static final double s_kD = 0;
+        public static final double s_kIz = 0;
+        public static final double s_kFF = 0;
+        public static final double s_kMaxOutput = 0;
+        public static final double s_kMinOutput = 0;
+        public static final double s_maxRPM = 0;
+        public static final double s_smartMAXVelocity = 0;
+        public static final double s_smartMAXAcc = 0;
+        public static final double s_allowedErr = 0;
+
+        //PID values second arm with gravity
+        public static final double sg_kP = 0;
+        public static final double sg_kI = 0;
+        public static final double sg_kD = 0;
+        public static final double sg_kIz = 0;
+        public static final double sg_kFF = 0;
+        public static final double sg_kMaxOutput = 0;
+        public static final double sg_kMinOutput = 0;
+        public static final double sg_maxRPM = 0;
+        public static final double sg_allowedErr = 0;
+        
         //PID loop
-        public static final double kP = 0;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kIz = 0;
-        public static final double kFF = 0;
-        public static final double kMaxOutput = 0;
-        public static final double kMinOutput = 0;
-        public static final double maxRPM = 0;
-        public static final double smartMAXVelocity = 0;
-        public static final double smartMAXAcc = 0;
-        public static final double allowedErr = 0;
+        //l
+
     }
 }
