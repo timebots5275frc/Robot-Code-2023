@@ -33,6 +33,8 @@ public class Arm extends SubsystemBase {
 
   private double sg_kP, sg_kI, sg_kD, sg_kIz, sg_kFF, sg_kMaxOutput, sg_kMinOutput, sg_maxRPM, sg_smartMAXVelocity,
   sg_smartMAXAcc, sg_allowedErr;
+
+  private boolean over;
   
   private double xValue;//x
   private double yValue;//y
@@ -163,6 +165,14 @@ public class Arm extends SubsystemBase {
 
   public void moveArm() {
     calculate();
+
+    if (over) {
+      firstArmPID.setReference(firstArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+      secondArmPID.setReference(firstArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+    } else {
+      firstArmPID.setReference(firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+      secondArmPID.setReference(firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+    }
   }
 
   @Override
