@@ -111,7 +111,7 @@ public class Arm extends SubsystemBase {
     firstArmPID.setSmartMotionMaxAccel(f_smartMAXAcc, 0);
     firstArmPID.setSmartMotionAllowedClosedLoopError(f_allowedErr, 0);
 
-    firstArmPID.setP(fg_kP, 1);7
+    firstArmPID.setP(fg_kP, 1);
     firstArmPID.setI(fg_kI, 1);
     firstArmPID.setD(fg_kD, 1);
     firstArmPID.setIZone(fg_kIz, 1);
