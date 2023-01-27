@@ -159,20 +159,11 @@ public class Arm extends SubsystemBase {
 
     xValue = normalizedVector[0];
     yValue = normalizedVector[1];
-    this.getArmAngles();
   }
 
   public void moveArm() {
-    
+    calculate();
   }
-
-
-  public void getArmAngles() {
-    this.calculate();
-
-  }
-
-
 
   @Override
   public void periodic() {
