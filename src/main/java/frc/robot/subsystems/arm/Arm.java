@@ -13,6 +13,7 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
   private CANSparkMax firstArmController;
@@ -36,8 +37,7 @@ public class Arm extends SubsystemBase {
 
   private boolean over;
   
-  private double xValue;//x
-  private double yValue;//y
+  public Vector2 pos;
   private double distance;
   private double firstArmAngle;
   private double secondArmAngle;
@@ -145,22 +145,21 @@ public class Arm extends SubsystemBase {
   }
 
   private void calculate() {
-    firstArmAngle = kinematics.solveFirstJoint(xValue, yValue);
-    secondArmAngle = kinematics.solveSecondJoint(xValue, yValue);
+    firstArmAngle = kinematics.solveFirstJoint(pos.x, pos.y);
+    secondArmAngle = kinematics.solveSecondJoint(pos.x, pos.y);
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
-    xValue += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    yValue += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    pos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    pos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
 
 
     // Sus Clamping Ahhhhhh
-    double[] normalizedVector = kinematics.normalizeVector(xValue, yValue);
-    normalizedVector[0] = normalizedVector[0] < 0 ? 0 : normalizedVector[0];
-    normalizedVector[1] = normalizedVector[1] < 0 ? 0 : normalizedVector[1];
+    Vector2 normalizedVector = Vector2.clampMagnitude(pos, kinematics.totalDistance());
+    normalizedVector.x = normalizedVector.x  < 0 ? 0 : normalizedVector.x ;
+    normalizedVector.y = normalizedVector.y < 0 ? 0 : normalizedVector.y;
 
-    xValue = normalizedVector[0];
-    yValue = normalizedVector[1];
+    pos = normalizedVector;
   }
 
   public void moveArm() {
@@ -178,5 +177,29 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void GetClampedPosValue(Vector2 pos)
+  {
+    Vector2 betweenIndexs = GetConstraintsBetween(pos);
+    double percentBetweenIndexs = PercentBetweenNumbers(pos.x, ArmConstants.ground_Constraints[(int)betweenIndexs.x].x, ArmConstants.ground_Constraints[(int)betweenIndexs.y].x);
+    Vector2 clampPos = Vector2.lerp(ArmConstants.ground_Constraints[(int)betweenIndexs.x], ArmConstants.ground_Constraints[(int)betweenIndexs.y], percentBetweenIndexs);
+
+    
+  }
+
+  Vector2 GetConstraintsBetween(Vector2 pos) {
+    for (int i = 0; i < ArmConstants.ground_Constraints.length; i++) {
+      if (ArmConstants.ground_Constraints[i].x < pos.x && i + 1 < ArmConstants.ground_Constraints.length && ArmConstants.ground_Constraints[i + 1].x > pos.x) {
+        return new Vector2(i, i + 1);
+      }
+    }
+
+    return new Vector2(-1, -1);
+  }
+
+  public double PercentBetweenNumbers(double value, double min, double max) {
+    double offset = 0 - min;
+    return (value + offset) / (max + offset);
   }
 }
