@@ -4,6 +4,7 @@
 
 package frc.robot.constants;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.subsystems.arm.Vector2;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -190,5 +191,8 @@ public class Constants {
         //PID loop
         //l
 
+        // Arm Ground Constraints (Relative to arm mount points in inches)
+        public static final Vector2[] ground_Constraints = {new Vector2(f_kMaxOutput, f_smartMAXVelocity) };
+        public static final double gripperRadius = 7; // inches
     }
 }
