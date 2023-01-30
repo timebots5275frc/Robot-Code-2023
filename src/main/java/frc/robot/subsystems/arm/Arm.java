@@ -37,7 +37,7 @@ public class Arm extends SubsystemBase {
 
   private boolean over;
   
-  public Vector2 pos;
+  public Vector2 pos = new Vector2(0, 0); // Change to set default pos
   private double distance;
   private double firstArmAngle;
   private double secondArmAngle;
@@ -155,10 +155,7 @@ public class Arm extends SubsystemBase {
 
 
     // Sus Clamping Ahhhhhh
-    Vector2 normalizedVector = Vector2.clampMagnitude(pos, kinematics.totalDistance());
-    normalizedVector.x = normalizedVector.x  < 0 ? 0 : normalizedVector.x ;
-    normalizedVector.y = normalizedVector.y < 0 ? 0 : normalizedVector.y;
-
+    Vector2 normalizedVector = GetClampedPosValue(pos);
     pos = normalizedVector;
   }
 
@@ -179,13 +176,16 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void GetClampedPosValue(Vector2 pos)
+  public Vector2 GetClampedPosValue(Vector2 pos)
   {
-    Vector2 betweenIndexs = GetConstraintsBetween(pos);
-    double percentBetweenIndexs = PercentBetweenNumbers(pos.x, ArmConstants.ground_Constraints[(int)betweenIndexs.x].x, ArmConstants.ground_Constraints[(int)betweenIndexs.y].x);
-    Vector2 clampPos = Vector2.lerp(ArmConstants.ground_Constraints[(int)betweenIndexs.x], ArmConstants.ground_Constraints[(int)betweenIndexs.y], percentBetweenIndexs);
-
+    Vector2 clampedPos = new Vector2(pos.x, pos.y);
     
+    Vector2 betweenIndexs = GetConstraintsBetween(pos); // x is first index, y is second index
+    double percentBetweenIndexs = PercentBetweenNumbers(pos.x, ArmConstants.ground_Constraints[(int)betweenIndexs.x].x, ArmConstants.ground_Constraints[(int)betweenIndexs.y].x);
+    Vector2 clampPos = Vector2.lerp(ArmConstants.ground_Constraints[(int)betweenIndexs.x], ArmConstants.ground_Constraints[(int)betweenIndexs.y], percentBetweenIndexs); // Position at the percent (lerped)
+    
+    if (pos.y < clampPos.y + ArmConstants.gripperRadius) {clampedPos.y = clampPos.y + ArmConstants.gripperRadius; } // Clamps position above or equal to the farthest down position allowed
+    return Vector2.clampMagnitude(clampedPos, kinematics.totalDistance()); // Clamps  value to total distance of the arm
   }
 
   Vector2 GetConstraintsBetween(Vector2 pos) {
