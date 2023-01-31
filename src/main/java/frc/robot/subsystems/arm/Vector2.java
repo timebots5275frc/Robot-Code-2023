@@ -30,7 +30,7 @@ public class Vector2{
     public Vector2 normalized()
     {
         double distance = distance(0, 0, x, y);
-        return new Vector2(x / distance, y / distance);
+        return this.divideBy(distance);
     }
 
     public static Vector2 lerp(Vector2 a, Vector2 b, double percent)
@@ -61,5 +61,10 @@ public class Vector2{
     public Vector2 substract(Vector2 a)
     {
         return new Vector2(x - a.x, y - a.y);
+    }
+
+    public Vector2 divideBy(double b)
+    {
+        return new Vector2(x / b, y / b);
     }
 }
