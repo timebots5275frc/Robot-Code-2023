@@ -145,8 +145,8 @@ public class Arm extends SubsystemBase {
   }
 
   private void calculate() {
-    firstArmAngle = kinematics.solveFirstJoint(pos.x, pos.y);
-    secondArmAngle = kinematics.solveSecondJoint(pos.x, pos.y);
+    firstArmAngle = kinematics.solveFirstJoint(pos);
+    secondArmAngle = kinematics.solveSecondJoint(pos);
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
