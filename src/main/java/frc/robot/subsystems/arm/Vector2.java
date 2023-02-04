@@ -37,7 +37,7 @@ public class Vector2{
 
     public static Vector2 lerp(Vector2 a, Vector2 b, double percent)
     {
-        Vector2 relativePos = a.substract(b);
+        Vector2 relativePos = b.substract(a);
 
         return a.add(relativePos.times(percent));
     }
