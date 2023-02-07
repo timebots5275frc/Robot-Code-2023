@@ -15,15 +15,17 @@ public class TwoJointInverseKinematics {
     public double solveFirstJoint(Vector2 target)
     {
         double distance = Vector2.distance(Vector2.zero, target);
-        boolean negative = lawOfCosines(firstJointLength, distance, secondJointLength) < 0;
-
-        return (Math.atan(target.y/target.x) - lawOfCosines(firstJointLength, distance, secondJointLength) * (negative ? 1 : -1)) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
+        if (target.x >= 0) {
+            return (Math.atan(target.y/target.x) - lawOfCosines(firstJointLength, distance, secondJointLength)) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
+        } else {
+            return 180 + (Math.atan(target.y/target.x) - lawOfCosines(firstJointLength, distance, secondJointLength)) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
+        }
     }
 
     public double solveSecondJoint(Vector2 target)
     {
         double distance = Vector2.distance(Vector2.zero, target);
-        return lawOfCosines(firstJointLength, secondJointLength, distance) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
+        return 180 - lawOfCosines(firstJointLength, secondJointLength, distance) * Constants.ArmConstants.RAD_TO_DEG_RATIO;
     }
 
     public double lawOfCosines(double leg1, double leg2, double hypotenuse)
