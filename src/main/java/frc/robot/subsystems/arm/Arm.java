@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix.sensors.CANCoder;
 import com.fasterxml.jackson.databind.introspect.AnnotationCollector.TwoAnnotations;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -22,6 +23,8 @@ public class Arm extends SubsystemBase {
   private RelativeEncoder secondArmEncoder;
   private SparkMaxPIDController firstArmPID;
   private SparkMaxPIDController secondArmPID;
+  private CANCoder firstArmCANCoder;
+  private CANCoder secondArmCANCoder;
 
   private double f_kP, f_kI, f_kD, f_kIz, f_kFF, f_kMaxOutput, f_kMinOutput, f_maxRPM, f_smartMAXVelocity,
   f_smartMAXAcc, f_allowedErr;
@@ -41,6 +44,8 @@ public class Arm extends SubsystemBase {
   private double distance;
   private double firstArmAngle;
   private double secondArmAngle;
+  private double firstArmCurrentAngle;
+  private double secondArmCurrentAngle;
   private TwoJointInverseKinematics kinematics;
 
   public Arm() {
@@ -48,11 +53,11 @@ public class Arm extends SubsystemBase {
     secondArmController = new CANSparkMax(Constants.ArmConstants.SECOND_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
     firstArmEncoder = firstArmController.getEncoder();
     secondArmEncoder = secondArmController.getEncoder();
-    firstArmEncoder.setPositionConversionFactor(Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO);
-    secondArmEncoder.setPositionConversionFactor(Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO);
     firstArmPID = firstArmController.getPIDController();
     secondArmPID = secondArmController.getPIDController();
     kinematics = new TwoJointInverseKinematics(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, Constants.ArmConstants.ARM_SECOND_PART_LENGTH);
+    firstArmCANCoder = new CANCoder(Constants.ArmConstants.FIRST_ARM_CANCODER_ID);
+    secondArmCANCoder = new CANCoder(Constants.ArmConstants.SECOND_ARM_CANCODER_ID);
 
     //PID Values
     f_kP = Constants.ArmConstants.f_kP;
@@ -144,9 +149,17 @@ public class Arm extends SubsystemBase {
     secondArmPID.setSmartMotionAllowedClosedLoopError(sg_allowedErr, 1);
   }
 
-  private void calculate() {
+  private void calculateArmAngles() {
     firstArmAngle = kinematics.solveFirstJoint(pos);
     secondArmAngle = kinematics.solveSecondJoint(pos);
+  }
+
+  private void getFirstArmAngle() {
+    firstArmCurrentAngle = firstArmCANCoder.getAbsolutePosition();
+  }
+
+  private void getSecondArmAngle() {
+    secondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
@@ -160,14 +173,18 @@ public class Arm extends SubsystemBase {
   }
 
   public void moveArm() {
-    calculate();
+    calculateArmAngles();
+    getFirstArmAngle();
+    getSecondArmAngle();
+    firstArmEncoder.setPosition(firstArmCurrentAngle);
+    secondArmEncoder.setPosition(secondArmCurrentAngle);
 
     if (over) {
-      firstArmPID.setReference(firstArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
-      secondArmPID.setReference(firstArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+      firstArmPID.setReference(/*test these for potential negatives*/firstArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+      secondArmPID.setReference(-secondArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
     } else {
-      firstArmPID.setReference(firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
-      secondArmPID.setReference(firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+      firstArmPID.setReference(-firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+      secondArmPID.setReference(-firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
     }
   }
 

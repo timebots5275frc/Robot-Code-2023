@@ -127,6 +127,8 @@ public class Constants {
     public static final class ArmConstants {
         public static final int FIRST_ARM_MOTOR_ID = 0;
         public static final int SECOND_ARM_MOTOR_ID = 0;
+        public static final int FIRST_ARM_CANCODER_ID = 0;
+        public static final int SECOND_ARM_CANCODER_ID = 0;
         public static final double ARM_FIRST_PART_LENGTH = 40;
         public static final double ARM_SECOND_PART_LENGTH = 40;
         public static final double POINT_MOVEMENT_FACTOR = 0.02;
@@ -135,8 +137,13 @@ public class Constants {
         public static final double RAD_TO_DEG_RATIO = 57.2957795;
         public static final double FIRST_ARM_MOTOR_ROTATION_RATIO = 0;
         public static final double SECOND_ARM_MOTOR_ROTATION_RATIO = 0;
+        public static final double FIRST_ARM_DEGREES_TO_ROTATIONS = 0;
+        public static final double FIRST_ARM_ROTATIONS_TO_DEGREES = 0;
+        public static final double SECOND_ARM_DEGREES_TO_ROTATIONS = 0;
+        public static final double SECOND_ARM_ROTATIONS_TO_DEGREES = 0;
         public static final double sg_smartMAXVelocity = 0;
         public static final double sg_smartMAXAcc = 0;
+
 
         //PID values first arm against gravity
         public static final double f_kP = 0;
