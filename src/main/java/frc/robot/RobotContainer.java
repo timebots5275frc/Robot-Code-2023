@@ -4,6 +4,7 @@
 
 package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.teleop.MoveArm;
 import frc.robot.commands.teleop.TeleopJoystickDrive;
@@ -52,6 +53,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    new JoystickButton(driveJoystick, 9).whileTrue();
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
