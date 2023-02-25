@@ -12,10 +12,22 @@ public class MoveArm extends CommandBase {
   /** Creates a new MoveArm. */
   Arm arm;
   Joystick joystick;
+  double firstAngle;
+  double secondAngle;
+  boolean usingAngle;
   public MoveArm(Arm _arm, Joystick _joystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = _arm;
     joystick = _joystick;
+    usingAngle = false;
+  }
+
+  public MoveArm(Arm _arm, Joystick _joystick, double fangle, double sangle) {
+    arm = _arm;
+    joystick = _joystick;
+    firstAngle = fangle;
+    secondAngle = sangle;
+    usingAngle = true;
   }
 
   // Called when the command is initially scheduled.
@@ -25,8 +37,13 @@ public class MoveArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.movePoint(joystick.getX(), joystick.getY());
-    arm.moveArm();
+    if (!usingAngle) {
+      arm.movePoint(joystick.getX(), joystick.getY());
+      arm.moveArm();
+    } else {
+      arm.moveArm(firstAngle, secondAngle);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.

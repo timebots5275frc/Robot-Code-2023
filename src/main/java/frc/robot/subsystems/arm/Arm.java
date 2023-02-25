@@ -188,6 +188,21 @@ public class Arm extends SubsystemBase {
     }
   }
 
+  public void moveArm(double f_angle, double s_angle) {
+    getFirstArmAngle();
+    getSecondArmAngle();
+    firstArmEncoder.setPosition(firstArmCurrentAngle);
+    secondArmEncoder.setPosition(secondArmCurrentAngle);
+
+    if (over) {
+      firstArmPID.setReference(/*test these for potential negatives*/f_angle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+      secondArmPID.setReference(-s_angle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+    } else {
+      firstArmPID.setReference(-f_angle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+      secondArmPID.setReference(-s_angle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
