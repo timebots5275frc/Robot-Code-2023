@@ -200,7 +200,12 @@ public class Constants {
         //l
 
         // Arm Ground Constraints (Relative to arm mount points in inches)
-        public static final Vector2[] ground_Constraints = {new Vector2(f_kMaxOutput, f_smartMAXVelocity) };
+        public static final Vector2[] ground_Constraints = {
+            new Vector2(-26.5601, -26.117), //  Far left top of battery mount
+            new Vector2(-23.398, -16.5532), //  Left top arm mount
+            new Vector2(-22.6487, -15.424), //  Left motor
+            new Vector2(-21.0854, -13.8517), //  Top motor
+        };
         public static final double gripperRadius = 7; // inches
     }
 }
