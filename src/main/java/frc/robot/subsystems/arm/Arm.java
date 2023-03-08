@@ -202,6 +202,7 @@ public class Arm extends SubsystemBase {
       secondArmPID.setReference(-s_angle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
     }
   }
+  
 
   @Override
   public void periodic() {
