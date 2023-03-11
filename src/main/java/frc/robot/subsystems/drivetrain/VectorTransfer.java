@@ -1,6 +1,6 @@
 package frc.robot.subsystems.drivetrain;
 
-import frc.robot.subsystems.arm.Vector2;
+import frc.robot.math2.Vector2;
 
 public class VectorTransfer {
     public static double[][] matrix;

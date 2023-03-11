@@ -15,6 +15,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ArmConstants;
+import frc.robot.math2.Vector2;
 
 import java.util.List;
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import frc.robot.constants.Constants;
+import frc.robot.math2.Vector2;
 
 public class TwoJointInverseKinematics {
     private double firstJointLength;
