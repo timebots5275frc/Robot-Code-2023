@@ -36,24 +36,34 @@ public class Matrix {
         return newMatrix;
    }
 
-   public Matrix matrixSubtract(Matrix m) {
-    Matrix newMatrix = new Matrix(this.rows, this.columns);
-    if(this.columns == m.columns && this.rows == m.rows) {
-        for(int r = 0; r < this.rows; r++) {
-            for(int c = 0; c < this.columns; c++) {
-                newMatrix.matrix[r][c] = this.matrix[r][c] - m.matrix[r][c];
+    public Matrix matrixSubtract(Matrix m) {
+        Matrix newMatrix = new Matrix(this.rows, this.columns);
+        if(this.columns == m.columns && this.rows == m.rows) {
+            for(int r = 0; r < this.rows; r++) {
+                for(int c = 0; c < this.columns; c++) {
+                    newMatrix.matrix[r][c] = this.matrix[r][c] - m.matrix[r][c];
+                }
             }
         }
+        return newMatrix;
     }
-    return newMatrix;
-}
 
    public void setItem(double number, int row, int column) {
         matrix[row][column] = number;
    }
 
-   public double getItem(int r, int c) {
-        return matrix[r][c];
+   public void setMatrix(double[][] values) {
+        if(values.length == rows && values[0].length == columns) {
+            for(int r = 0; r < rows; r++) {
+                for(int c = 0; c < columns; c++) {
+                    matrix[r][c] = values[r][c];
+                }
+            }
+        }
+    }
+
+   public double getItem(int row, int column) {
+        return matrix[row][column];
    }
 
    public double retreiveSum(double[] one, Matrix two, int col) {
