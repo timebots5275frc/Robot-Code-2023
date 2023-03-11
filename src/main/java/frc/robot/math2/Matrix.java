@@ -24,6 +24,30 @@ public class Matrix {
        return newMatrix; 
    }
 
+   public Matrix matrixAdd(Matrix m) {
+        Matrix newMatrix = new Matrix(this.rows, this.columns);
+        if(this.columns == m.columns && this.rows == m.rows) {
+            for(int r = 0; r < this.rows; r++) {
+                for(int c = 0; c < this.columns; c++) {
+                    newMatrix.matrix[r][c] = this.matrix[r][c] + m.matrix[r][c];
+                }
+            }
+        }
+        return newMatrix;
+   }
+
+   public Matrix matrixSubtract(Matrix m) {
+    Matrix newMatrix = new Matrix(this.rows, this.columns);
+    if(this.columns == m.columns && this.rows == m.rows) {
+        for(int r = 0; r < this.rows; r++) {
+            for(int c = 0; c < this.columns; c++) {
+                newMatrix.matrix[r][c] = this.matrix[r][c] - m.matrix[r][c];
+            }
+        }
+    }
+    return newMatrix;
+}
+
    public void setItem(double number, int row, int column) {
         matrix[row][column] = number;
    }

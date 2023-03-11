@@ -1,3 +1,0 @@
-Get lenghts of pole
-Get encoder
-Use trig to determine limits of arm using cos()
