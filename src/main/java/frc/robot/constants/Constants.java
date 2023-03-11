@@ -136,6 +136,7 @@ public class Constants {
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
         public static final double RAD_TO_DEG_RATIO = 57.2957795;
+        public static final double DEG_TO_RAD_RATIO = 0.01745329251;
         public static final double FIRST_ARM_MOTOR_ROTATION_RATIO = 0;
         public static final double SECOND_ARM_MOTOR_ROTATION_RATIO = 0;
         public static final double FIRST_ARM_DEGREES_TO_ROTATIONS = 0;
@@ -195,16 +196,23 @@ public class Constants {
         public static final double sg_kMinOutput = 0;
         public static final double sg_maxRPM = 0;
         public static final double sg_allowedErr = 0;
+
+        public static final double Move_Sequence_Allowed_Error = .5f; // in inches
+        public static final double Move_Points_Per_Inch = 1; // in inches
         
         //PID loop
         //l
 
         // Arm Ground Constraints (Relative to arm mount points in inches)
         public static final Vector2[] ground_Constraints = {
+            new Vector2(-30.0061, -25.8670), //  Back of motor
             new Vector2(-26.5601, -26.117), //  Far left top of battery mount
             new Vector2(-23.398, -16.5532), //  Left top arm mount
             new Vector2(-22.6487, -15.424), //  Left motor
             new Vector2(-21.0854, -13.8517), //  Top motor
+            new Vector2(-19.1559, -15.7821), //  Right motor
+            new Vector2(-17.0811, -22.5870), //  Right battery
+            new Vector2(6.9939, -25.8670), //  Front of bumper
         };
         public static final double gripperRadius = 7; // inches
     }

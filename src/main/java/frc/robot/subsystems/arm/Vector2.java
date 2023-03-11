@@ -2,6 +2,8 @@ package frc.robot.subsystems.arm;
 
 import javax.swing.text.View;
 
+import frc.robot.constants.Constants.ArmConstants;
+
 public class Vector2{
     public double x;
     public double y;
@@ -68,5 +70,34 @@ public class Vector2{
     public Vector2 divideBy(double b)
     {
         return new Vector2(x / b, y / b);
+    }
+    
+    public Vector2 RotateVectorByDegrees(Vector2 orig, double degrees) { return RadToVector2(Vector2ToRad(orig) + (degrees * ArmConstants.DEG_TO_RAD_RATIO)).times(orig.magnitude()); }
+
+    public static double Vector2ToRad(Vector2 orig)
+    {
+        double angle;
+        if (orig.x == 0) 
+        {
+            if (orig.y < 0) { angle = 270 * ArmConstants.DEG_TO_RAD_RATIO; }
+            else { angle = 90 * ArmConstants.DEG_TO_RAD_RATIO; }
+        }
+        
+        else if (orig.y == 0)
+        {
+            if (orig.x < 0) { angle = 180 * ArmConstants.DEG_TO_RAD_RATIO; }
+            else { angle = 0 * ArmConstants.DEG_TO_RAD_RATIO; }
+        }
+
+        else { angle = Math.atan(orig.y / orig.x); if (orig.x < 0) { angle += Math.PI; } }
+
+        return angle;
+    }
+
+    public static Vector2 RadToVector2(double angle)
+    {
+        angle %= 360;
+        double cos = Math.cos(angle);
+        return new Vector2(cos * (angle > 90 && angle < 270 ? -1 : 1), Math.sin(angle));
     }
 }

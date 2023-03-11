@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ArmConstants;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Arm extends SubsystemBase {
   private CANSparkMax firstArmController;
   private CANSparkMax secondArmController;
@@ -47,6 +50,8 @@ public class Arm extends SubsystemBase {
   private double firstArmCurrentAngle;
   private double secondArmCurrentAngle;
   private TwoJointInverseKinematics kinematics;
+
+  private List<Vector2> moveSequence;
 
   public Arm() {
     firstArmController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -147,6 +152,8 @@ public class Arm extends SubsystemBase {
     secondArmPID.setSmartMotionMaxVelocity(sg_smartMAXVelocity, 1);
     secondArmPID.setSmartMotionMaxAccel(sg_smartMAXAcc, 1);
     secondArmPID.setSmartMotionAllowedClosedLoopError(sg_allowedErr, 1);
+
+    moveSequence = new ArrayList<Vector2>();
   }
 
   private void calculateArmAngles() {
@@ -163,6 +170,8 @@ public class Arm extends SubsystemBase {
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
+    if (!moveSequence.isEmpty()) { moveSequence.clear(); }
+
     pos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     pos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
 
@@ -202,11 +211,15 @@ public class Arm extends SubsystemBase {
       secondArmPID.setReference(-s_angle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
     }
   }
+
+  public void moveArm(Vector2 point) {
+    movePoint(kinematics.solveFirstJoint(point), kinematics.solveSecondJoint(point));
+  }
   
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (!moveSequence.isEmpty()) { checkMoveSequence(); }
   }
 
   public Vector2 GetClampedPosValue(Vector2 pos)
@@ -234,5 +247,47 @@ public class Arm extends SubsystemBase {
   public double PercentBetweenNumbers(double value, double min, double max) {
     double offset = 0 - min;
     return (value + offset) / (max + offset);
+  }
+
+  public void goToPoint(Vector2 pointToGoTo) // for creating move sequence
+  {
+    Vector2 armPos = RealArmPosition();
+    double inchesBetweenPoints = Vector2.distance(armPos, pointToGoTo);
+    int totalPoints = (int)Math.ceil(inchesBetweenPoints * ArmConstants.Move_Points_Per_Inch);
+    moveSequence.clear();
+
+    for (int i = 0; i <= totalPoints; i++)
+    {
+      moveSequence.add(GetClampedPosValue(Vector2.lerp(armPos, pointToGoTo, i / (double)totalPoints)));
+    }
+
+    moveArm(moveSequence.get(0));
+  }
+
+  private void checkMoveSequence()
+  {
+    Vector2 armPos = RealArmPosition();
+
+    if (Vector2.distance(armPos, moveSequence.get(0)) <= ArmConstants.Move_Sequence_Allowed_Error)
+    {
+      moveSequence.remove(0);
+
+      if (!moveSequence.isEmpty())
+      {
+        Vector2 nextPoint = moveSequence.get(0);
+        moveArm(nextPoint);
+      }
+    }
+  }
+
+  public Vector2 RealArmPosition()
+  {
+    getFirstArmAngle();
+    getSecondArmAngle();
+
+    Vector2 firstArmPos = Vector2.RadToVector2(firstArmAngle * ArmConstants.DEG_TO_RAD_RATIO).times(ArmConstants.ARM_FIRST_PART_LENGTH);
+    Vector2 secondArmPos = Vector2.RadToVector2((firstArmAngle + secondArmAngle) * ArmConstants.DEG_TO_RAD_RATIO).times(ArmConstants.ARM_SECOND_PART_LENGTH);
+
+    return firstArmPos.add(secondArmPos);
   }
 }
