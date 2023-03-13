@@ -100,4 +100,16 @@ public class Vector2{
         double cos = Math.cos(angle);
         return new Vector2(cos * (angle > 90 && angle < 270 ? -1 : 1), Math.sin(angle));
     }
+
+    public static Vector2 pointFromRotation(double x, double y, double angle) 
+    {
+        double[][] e = {{Math.cos(angle), -Math.sin(angle)}, {Math.sin(angle), Math.cos(angle)}};
+        Matrix rotMatrix = new Matrix(2, 2);
+        rotMatrix.setMatrix(e);
+        Matrix pointMatrix = new Matrix(2, 1);
+        pointMatrix.setItem(x, 0, 0);
+        pointMatrix.setItem(y, 1, 0);
+        Matrix rotatedPoints = rotMatrix.matrixMultiply(pointMatrix);
+        return new Vector2(rotatedPoints.getItem(0, 0), rotatedPoints.getItem(1, 0));
+    }
 }

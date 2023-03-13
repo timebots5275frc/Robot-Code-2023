@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -51,6 +52,8 @@ public class Arm extends SubsystemBase {
   private double firstArmCurrentAngle;
   private double secondArmCurrentAngle;
   private TwoJointInverseKinematics kinematics;
+
+
 
   private List<Vector2> moveSequence;
 
@@ -252,7 +255,7 @@ public class Arm extends SubsystemBase {
 
   public void goToPoint(Vector2 pointToGoTo) // for creating move sequence
   {
-    Vector2 armPos = RealArmPosition();
+    Vector2 armPos = realArmPosition();
     double inchesBetweenPoints = Vector2.distance(armPos, pointToGoTo);
     int totalPoints = (int)Math.ceil(inchesBetweenPoints * ArmConstants.Move_Points_Per_Inch);
     moveSequence.clear();
@@ -267,7 +270,7 @@ public class Arm extends SubsystemBase {
 
   private void checkMoveSequence()
   {
-    Vector2 armPos = RealArmPosition();
+    Vector2 armPos = realArmPosition();
 
     if (Vector2.distance(armPos, moveSequence.get(0)) <= ArmConstants.Move_Sequence_Allowed_Error)
     {
@@ -281,13 +284,13 @@ public class Arm extends SubsystemBase {
     }
   }
 
-  public Vector2 RealArmPosition()
+  public Vector2 realArmPosition()
   {
     getFirstArmAngle();
     getSecondArmAngle();
 
-    Vector2 firstArmPos = Vector2.RadToVector2(firstArmAngle * ArmConstants.DEG_TO_RAD_RATIO).times(ArmConstants.ARM_FIRST_PART_LENGTH);
-    Vector2 secondArmPos = Vector2.RadToVector2((firstArmAngle + secondArmAngle) * ArmConstants.DEG_TO_RAD_RATIO).times(ArmConstants.ARM_SECOND_PART_LENGTH);
+    Vector2 firstArmPos = Vector2.pointFromRotation(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, 0, firstArmCurrentAngle);
+    Vector2 secondArmPos = Vector2.pointFromRotation(Constants.ArmConstants.ARM_SECOND_PART_LENGTH, 0, firstArmCurrentAngle + secondArmCurrentAngle);
 
     return firstArmPos.add(secondArmPos);
   }
