@@ -231,10 +231,11 @@ public class Arm extends SubsystemBase {
     Vector2 clampedPos = new Vector2(pos.x, pos.y);
     
     Vector2 betweenIndexs = GetConstraintsBetween(pos); // x is first index, y is second index
+    Vector2 diffBetweenPoints = ArmConstants.ground_Constraints[(int)betweenIndexs.x].substract(ArmConstants.ground_Constraints[(int)betweenIndexs.y]);
     double percentBetweenIndexs = PercentBetweenNumbers(pos.x, ArmConstants.ground_Constraints[(int)betweenIndexs.x].x, ArmConstants.ground_Constraints[(int)betweenIndexs.y].x);
     Vector2 clampPos = Vector2.lerp(ArmConstants.ground_Constraints[(int)betweenIndexs.x], ArmConstants.ground_Constraints[(int)betweenIndexs.y], percentBetweenIndexs); // Position at the percent (lerped)
     
-    if (pos.y < clampPos.y + ArmConstants.gripperRadius) {clampedPos.y = clampPos.y + ArmConstants.gripperRadius; } // Clamps position above or equal to the farthest down position allowed
+    if (Vector2.distance(pos, clampPos) <= ArmConstants.gripperRadius || clampPos.y > pos.y + ArmConstants.gripperRadius) { clampedPos = clampPos.add(Vector2.clampMagnitude(new Vector2(diffBetweenPoints.y > 0 ? -1 : 1, 1), 1).times(ArmConstants.gripperRadius)); }
     return Vector2.clampMagnitude(clampedPos, kinematics.totalDistance()); // Clamps  value to total distance of the arm
   }
 
