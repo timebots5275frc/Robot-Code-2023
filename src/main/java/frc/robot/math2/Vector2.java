@@ -112,4 +112,16 @@ public class Vector2{
         Matrix rotatedPoints = rotMatrix.matrixMultiply(pointMatrix);
         return new Vector2(rotatedPoints.getItem(0, 0), rotatedPoints.getItem(1, 0));
     }
+
+    public static Vector2 pointFromRotation(Vector2 pos, double angle) 
+    {
+        double[][] e = {{Math.cos(angle), -Math.sin(angle)}, {Math.sin(angle), Math.cos(angle)}};
+        Matrix rotMatrix = new Matrix(2, 2);
+        rotMatrix.setMatrix(e);
+        Matrix pointMatrix = new Matrix(2, 1);
+        pointMatrix.setItem(pos.x, 0, 0);
+        pointMatrix.setItem(pos.y, 1, 0);
+        Matrix rotatedPoints = rotMatrix.matrixMultiply(pointMatrix);
+        return new Vector2(rotatedPoints.getItem(0, 0), rotatedPoints.getItem(1, 0));
+    }
 }
