@@ -61,14 +61,14 @@ public class Constants {
         // positive Z direction,
         // Middle finger points left in the positive Y direction.
 
-        public static final double LEFT_FRONT_WHEEL_X = 11.75 * 0.0254; // meters
-        public static final double LEFT_FRONT_WHEEL_Y = 11.75 * 0.0254; // meters .5969
-        public static final double RIGHT_FRONT_WHEEL_X = 11.75 * 0.0254; // meters
-        public static final double RIGHT_FRONT_WHEEL_Y = -11.75 * 0.0254; // meters
-        public static final double RIGHT_REAR_WHEEL_X = -11.75 * 0.0254; // meters
-        public static final double RIGHT_REAR_WHEEL_Y = -11.75 * 0.0254; // meters
-        public static final double LEFT_REAR_WHEEL_X = -11.75 * 0.0254; // meters
-        public static final double LEFT_REAR_WHEEL_Y = 11.75 * 0.0254; // meters
+        public static final double LEFT_FRONT_WHEEL_X = (/* inside chassis point */11 - /* wheel center offset */2.25) * 0.0254; // meters
+        public static final double LEFT_FRONT_WHEEL_Y = (14 - 2.25) * 0.0254; // meters .5969
+        public static final double RIGHT_FRONT_WHEEL_X = (11 - 2.25) * 0.0254; // meters
+        public static final double RIGHT_FRONT_WHEEL_Y = (-14 + 2.25) * 0.0254; // meters
+        public static final double RIGHT_REAR_WHEEL_X = (-11 + 2.25) * 0.0254; // meters
+        public static final double RIGHT_REAR_WHEEL_Y = (-14 + 2.25) * 0.0254; // meters
+        public static final double LEFT_REAR_WHEEL_X = (-11 + 2.25) * 0.0254; // meters
+        public static final double LEFT_REAR_WHEEL_Y = (14 - 2.25) * 0.0254; // meters
 
         public static final double WHEEL_RADIUS = 2.0 * 0.0254; // meters * 0.98
         public static final double WHEEL_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_RADIUS; // meters/revolution
