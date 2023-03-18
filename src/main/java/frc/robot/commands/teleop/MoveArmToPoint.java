@@ -6,41 +6,26 @@ package frc.robot.commands.teleop;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.math2.Vector2;
 import frc.robot.subsystems.arm.Arm;
 
-public class MoveArm extends CommandBase {
-  /** Creates a new MoveArm. */
+public class MoveArmToPoint extends CommandBase {
+  /** Creates a new MoveArmToPoint. */
   Arm arm;
-  Joystick joystick;
-  double firstAngle;
-  double secondAngle;
-  boolean usingAngle;
-  public MoveArm(Arm _arm, Joystick _joystick) {
+  Vector2 point;
+  public MoveArmToPoint(Arm _arm, Vector2 _point) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = _arm;
-    joystick = _joystick;
-    usingAngle = false;
+    point = _point;
   }
-
-  public MoveArm(Arm _arm, Joystick _joystick, double fangle, double sangle) {
-    arm = _arm;
-    joystick = _joystick;
-    firstAngle = fangle;
-    secondAngle = sangle;
-    usingAngle = true;
-  }
-
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    arm.initializeArm();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      arm.movePoint(joystick.getX(), joystick.getY());
-      arm.moveArm();
+    arm.moveArm(point);
   }
 
   // Called once the command ends or is interrupted.

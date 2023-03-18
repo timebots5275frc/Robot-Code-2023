@@ -13,6 +13,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ArmConstants;
@@ -158,6 +159,13 @@ public class Arm extends SubsystemBase {
     secondArmPID.setSmartMotionAllowedClosedLoopError(sg_allowedErr, 1);
 
     moveSequence = new ArrayList<Vector2>();
+
+    //Logging yippee
+    SmartDashboard.putNumber("First Arm Mag Encoder", firstArmCANCoder.getAbsolutePosition());
+    SmartDashboard.putNumber("First Arm Spark Encoder", firstArmEncoder.getPosition());
+    SmartDashboard.putNumber("First Arm Mag Encoder", secondArmCANCoder.getAbsolutePosition());
+    SmartDashboard.putNumber("First Arm Spark Encoder", secondArmEncoder.getPosition());
+    over = true;
   }
 
   private void calculateArmAngles() {
@@ -170,7 +178,7 @@ public class Arm extends SubsystemBase {
   }
 
   private void getSecondArmAngle() {
-    secondArmAngle = secondArmCANCoder.getAbsolutePosition();
+    secondArmCurrentAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
@@ -185,6 +193,10 @@ public class Arm extends SubsystemBase {
     pos = normalizedVector;
   }
 
+  public void initializeArm() {
+    pos = realArmPosition();
+  }
+
   public void moveArm() {
     calculateArmAngles();
     getFirstArmAngle();
@@ -193,31 +205,32 @@ public class Arm extends SubsystemBase {
     secondArmEncoder.setPosition(secondArmCurrentAngle);
 
     if (over) {
-      firstArmPID.setReference(/*test these for potential negatives*/firstArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
-      secondArmPID.setReference(-secondArmAngle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+      firstArmPID.setReference(/*test these for potential negatives*/firstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
+      secondArmPID.setReference(-secondArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
     } else {
-      firstArmPID.setReference(-firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
-      secondArmPID.setReference(-firstArmAngle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+      firstArmPID.setReference(-firstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 1);
+      secondArmPID.setReference(-firstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 1);
     }
   }
 
   public void moveArm(double f_angle, double s_angle) {
     getFirstArmAngle();
     getSecondArmAngle();
-    firstArmEncoder.setPosition(firstArmCurrentAngle);
-    secondArmEncoder.setPosition(secondArmCurrentAngle);
+    firstArmEncoder.setPosition(firstArmCurrentAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
+    secondArmEncoder.setPosition(secondArmCurrentAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
 
     if (over) {
-      firstArmPID.setReference(/*test these for potential negatives*/f_angle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
-      secondArmPID.setReference(-s_angle * Constants.ArmConstants.FIRST_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 0);
+      firstArmPID.setReference(/*test these for potential negatives*/f_angle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
+      secondArmPID.setReference(-s_angle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
     } else {
-      firstArmPID.setReference(-f_angle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
-      secondArmPID.setReference(-s_angle * Constants.ArmConstants.SECOND_ARM_MOTOR_ROTATION_RATIO, CANSparkMax.ControlType.kSmartMotion, 1);
+      firstArmPID.setReference(-f_angle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 1);
+      secondArmPID.setReference(-s_angle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 1);
     }
   }
 
   public void moveArm(Vector2 point) {
-    movePoint(kinematics.solveFirstJoint(point), kinematics.solveSecondJoint(point));
+    Vector2 clampedPoint =  GetClampedPosValue(point);
+    moveArm(kinematics.solveFirstJoint(clampedPoint), kinematics.solveSecondJoint(clampedPoint));
   }
   
 

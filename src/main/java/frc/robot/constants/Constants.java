@@ -137,12 +137,12 @@ public class Constants {
         public static final double ARM_SECOND_PART_LIMIT = 0;
         public static final double RAD_TO_DEG_RATIO = 180 / Math.PI;
         public static final double DEG_TO_RAD_RATIO = Math.PI / 180;
-        public static final double FIRST_ARM_MOTOR_ROTATION_RATIO = 0;
-        public static final double SECOND_ARM_MOTOR_ROTATION_RATIO = 0;
-        public static final double FIRST_ARM_DEGREES_TO_ROTATIONS = 0;
-        public static final double FIRST_ARM_ROTATIONS_TO_DEGREES = 0;
-        public static final double SECOND_ARM_DEGREES_TO_ROTATIONS = 0;
-        public static final double SECOND_ARM_ROTATIONS_TO_DEGREES = 0;
+        public static final double FIRST_ARM_MOTOR_ROTATIONS_PER_360 = 150 * (62/17) * (17/16);
+        public static final double SECOND_ARM_MOTOR_ROTATIONS_PER_360 = 150 * (32/16);
+        public static final double FIRST_ARM_ROTATIONS_PER_DEGREE = FIRST_ARM_MOTOR_ROTATIONS_PER_360 / 360;
+        public static final double FIRST_ARM_DEGREES_PER_ROTATION = 360 / FIRST_ARM_MOTOR_ROTATIONS_PER_360;
+        public static final double SECOND_ARM_ROTATIONS_PER_DEGREE = SECOND_ARM_MOTOR_ROTATIONS_PER_360 / 360;
+        public static final double SECOND_ARM_DEGREES_PER_ROTATION = 360 / SECOND_ARM_MOTOR_ROTATIONS_PER_360;
         public static final double sg_smartMAXVelocity = 0;
         public static final double sg_smartMAXAcc = 0;
 
