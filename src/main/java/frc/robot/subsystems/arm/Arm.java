@@ -46,12 +46,11 @@ public class Arm extends SubsystemBase {
 
   private boolean over;
   
-  public Vector2 pos = new Vector2(0, 0); // Change to set default pos
-  private double distance;
-  private double firstArmAngle;
-  private double secondArmAngle;
-  private double firstArmCurrentAngle;
-  private double secondArmCurrentAngle;
+  public Vector2 targetPos = new Vector2(0, 0); // Change to set default pos
+  private double targetFirstArmAngle;
+  private double targetSecondArmAngle;
+  private double actualFirstArmAngle;
+  private double actualSecondArmAngle;
   private TwoJointInverseKinematics kinematics;
 
 
@@ -169,55 +168,44 @@ public class Arm extends SubsystemBase {
   }
 
   private void calculateArmAngles() {
-    firstArmAngle = kinematics.solveFirstJoint(pos);
-    secondArmAngle = kinematics.solveSecondJoint(pos);
+    targetFirstArmAngle = kinematics.solveFirstJoint(targetPos);
+    targetSecondArmAngle = kinematics.solveSecondJoint(targetPos);
   }
 
-  private void getFirstArmAngle() {
-    firstArmCurrentAngle = firstArmCANCoder.getAbsolutePosition();
+  private void getActualFirstArmAngle() {
+    actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
   }
 
-  private void getSecondArmAngle() {
-    secondArmCurrentAngle = secondArmCANCoder.getAbsolutePosition();
+  private void getActualSecondArmAngle() {
+    actualSecondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
   public void movePoint(double joystickValue, double joystickValue2) {
     if (!moveSequence.isEmpty()) { moveSequence.clear(); }
 
-    pos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    pos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
 
 
     // Sus Clamping Ahhhhhh
-    Vector2 normalizedVector = GetClampedPosValue(pos);
-    pos = normalizedVector;
+    Vector2 normalizedVector = GetClampedPosValue(targetPos);
+    targetPos = normalizedVector;
   }
 
   public void initializeArm() {
-    pos = realArmPosition();
+    targetPos = realArmPosition();
   }
 
   public void moveArm() {
     calculateArmAngles();
-    getFirstArmAngle();
-    getSecondArmAngle();
-    firstArmEncoder.setPosition(firstArmCurrentAngle);
-    secondArmEncoder.setPosition(secondArmCurrentAngle);
-
-    if (over) {
-      firstArmPID.setReference(/*test these for potential negatives*/firstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
-      secondArmPID.setReference(-secondArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
-    } else {
-      firstArmPID.setReference(-firstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 1);
-      secondArmPID.setReference(-firstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 1);
-    }
+    moveArm(targetFirstArmAngle, targetSecondArmAngle);
   }
 
   public void moveArm(double f_angle, double s_angle) {
-    getFirstArmAngle();
-    getSecondArmAngle();
-    firstArmEncoder.setPosition(firstArmCurrentAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
-    secondArmEncoder.setPosition(secondArmCurrentAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
+    getActualFirstArmAngle();
+    getActualSecondArmAngle();
+    firstArmEncoder.setPosition(actualFirstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
+    secondArmEncoder.setPosition(actualSecondArmAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
 
     if (over) {
       firstArmPID.setReference(/*test these for potential negatives*/f_angle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
@@ -302,11 +290,11 @@ public class Arm extends SubsystemBase {
 
   public Vector2 realArmPosition()
   {
-    getFirstArmAngle();
-    getSecondArmAngle();
+    getActualFirstArmAngle();
+    getActualSecondArmAngle();
 
-    Vector2 firstArmPos = Vector2.pointFromRotation(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, 0, firstArmCurrentAngle);
-    Vector2 secondArmPos = Vector2.pointFromRotation(Constants.ArmConstants.ARM_SECOND_PART_LENGTH, 0, firstArmCurrentAngle + secondArmCurrentAngle);
+    Vector2 firstArmPos = Vector2.pointFromRotation(Constants.ArmConstants.ARM_FIRST_PART_LENGTH, 0, actualFirstArmAngle);
+    Vector2 secondArmPos = Vector2.pointFromRotation(Constants.ArmConstants.ARM_SECOND_PART_LENGTH, 0, actualFirstArmAngle + actualSecondArmAngle);
 
     return firstArmPos.add(secondArmPos);
   }
