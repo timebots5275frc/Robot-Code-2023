@@ -228,7 +228,9 @@ public class Arm extends SubsystemBase {
 
   public Vector2 GetClampedPosValue(Vector2 pos)
   {
-    Vector2 clampedPos = new Vector2(pos.x, pos.y);
+    return Vector2.clampMagnitude(pos, ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH - .5);
+
+    /*Vector2 clampedPos = new Vector2(pos.x, pos.y);
     
     Vector2 betweenIndexs = GetConstraintsBetween(pos); // x is first index, y is second index
     Vector2 diffBetweenPoints = ArmConstants.ground_Constraints[(int)betweenIndexs.x].substract(ArmConstants.ground_Constraints[(int)betweenIndexs.y]);
@@ -246,7 +248,7 @@ public class Arm extends SubsystemBase {
       }
     }
 
-    return new Vector2(-1, -1);
+    return new Vector2(-1, -1);*/
   }
 
   public double PercentBetweenNumbers(double value, double min, double max) {
