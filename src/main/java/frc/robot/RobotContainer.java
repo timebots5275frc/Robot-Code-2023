@@ -23,22 +23,22 @@ public class RobotContainer {
 
   // Subsystems
   Drivetrain drivetrain = new Drivetrain();
-  Arm arm = new Arm();
+  //Arm arm = new Arm();
 
   //Joystic
   Joystick driveJoystick = new Joystick(0);
-  Joystick armJoystick = new Joystick(1);
+  //Joystick armJoystick = new Joystick(1);
 
   //Teleop Commands
   TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true);
-  MoveArm armWhenMove = new MoveArm(arm, armJoystick);
+  //MoveArm armWhenMove = new MoveArm(arm, armJoystick);
 
   //Auto commands
 
 
   public RobotContainer() {
     drivetrain.setDefaultCommand(drive);
-    arm.setDefaultCommand(armWhenMove);
+    //arm.setDefaultCommand(armWhenMove);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -53,7 +53,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driveJoystick, 9).whileTrue();
+    //new JoystickButton(driveJoystick, 9).whileTrue();
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
