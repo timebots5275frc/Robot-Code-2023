@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.teleop.MoveArm;
 import frc.robot.commands.teleop.TeleopJoystickDrive;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Arm2;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -24,6 +25,7 @@ public class RobotContainer {
   // Subsystems
   Drivetrain drivetrain = new Drivetrain();
   //Arm arm = new Arm();
+  Arm2 arm = new Arm2();
 
   //Joystic
   Joystick driveJoystick = new Joystick(0);
