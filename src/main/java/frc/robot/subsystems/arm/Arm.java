@@ -167,7 +167,7 @@ public class Arm extends SubsystemBase {
     over = true;
   }
 
-  private void calculateArmAngles() {
+  private void calculateKinematicsAngles() {
     targetFirstArmAngle = kinematics.solveFirstJoint(targetPos);
     targetSecondArmAngle = kinematics.solveSecondJoint(targetPos);
   }
@@ -180,7 +180,7 @@ public class Arm extends SubsystemBase {
     actualSecondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
-  public void movePoint(double joystickValue, double joystickValue2) {
+  public void moveTargetPoint(double joystickValue, double joystickValue2) {
     if (!moveSequence.isEmpty()) { moveSequence.clear(); }
 
     targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
@@ -197,7 +197,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void moveArm() {
-    calculateArmAngles();
+    calculateKinematicsAngles();
     moveArm(targetFirstArmAngle, targetSecondArmAngle);
   }
 
