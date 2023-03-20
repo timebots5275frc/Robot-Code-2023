@@ -203,18 +203,9 @@ public class Constants {
         //l
 
         // Arm Ground Constraints (Relative to arm mount points in inches)
-        public static final Vector2[] ground_Constraints = { 
-        new Vector2(-30.0061, -25.8670), //  Back of motor
-        new Vector2(-26.5601, -26.117), //  Far left top of battery mount
-        new Vector2(-23.398, -16.5532), //  Left top arm mount
-        new Vector2(-22.6487, -15.424), //  Left motor
-        new Vector2(-21.0854, -13.8517), //  Top motor
-        new Vector2(-19.1559, -15.7821), //  Right motor
-        new Vector2(-17.0811, -22.5870), //  Right battery
-        new Vector2(6.9939, -25.8670), //  Front of bumper
-    };
+
+        public static final double farthestBackTargetPos = -15;
+        public static final double farthestDownPosOverRobot = -20;
         public static final double gripperRadius = 7; // inches
-        public static final double Move_Sequence_Allowed_Error = 0.5;
-        public static final double Move_Points_Per_Inch = 1;
     }
 }
