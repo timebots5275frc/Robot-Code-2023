@@ -20,6 +20,7 @@ public class MoveArm extends CommandBase {
     arm = _arm;
     joystick = _joystick;
     usingAngle = false;
+    this.addRequirements(arm);
   }
 
   public MoveArm(Arm _arm, Joystick _joystick, double fangle, double sangle) {
@@ -34,6 +35,7 @@ public class MoveArm extends CommandBase {
   @Override
   public void initialize() {
     arm.initializeArm();
+    arm.setSparkEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

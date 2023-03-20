@@ -126,10 +126,10 @@ public class Constants {
     }
 
     public static final class ArmConstants {
-        public static final int FIRST_ARM_MOTOR_ID = 0;
-        public static final int SECOND_ARM_MOTOR_ID = 0;
-        public static final int FIRST_ARM_CANCODER_ID = 0;
-        public static final int SECOND_ARM_CANCODER_ID = 0;
+        public static final int FIRST_ARM_MOTOR_ID = 20;
+        public static final int SECOND_ARM_MOTOR_ID = 21;
+        public static final int FIRST_ARM_CANCODER_ID = 30;
+        public static final int SECOND_ARM_CANCODER_ID = 31;
         public static final double ARM_FIRST_PART_LENGTH = 18;
         public static final double ARM_SECOND_PART_LENGTH = 28;
         public static final double POINT_MOVEMENT_FACTOR = 0.02;
@@ -137,28 +137,29 @@ public class Constants {
         public static final double ARM_SECOND_PART_LIMIT = 0;
         public static final double RAD_TO_DEG_RATIO = 180 / Math.PI;
         public static final double DEG_TO_RAD_RATIO = Math.PI / 180;
-        public static final double FIRST_ARM_MOTOR_ROTATIONS_PER_360 = 150 * (62/17) * (17/16);
-        public static final double SECOND_ARM_MOTOR_ROTATIONS_PER_360 = 150 * (32/16);
-        public static final double FIRST_ARM_ROTATIONS_PER_DEGREE = FIRST_ARM_MOTOR_ROTATIONS_PER_360 / 360;
-        public static final double FIRST_ARM_DEGREES_PER_ROTATION = 360 / FIRST_ARM_MOTOR_ROTATIONS_PER_360;
-        public static final double SECOND_ARM_ROTATIONS_PER_DEGREE = SECOND_ARM_MOTOR_ROTATIONS_PER_360 / 360;
-        public static final double SECOND_ARM_DEGREES_PER_ROTATION = 360 / SECOND_ARM_MOTOR_ROTATIONS_PER_360;
+        public static final double FIRST_ARM_MOTOR_ROTATIONS_PER_360 = (150 * 62 * 17) / (17 * 16);
+        public static final double SECOND_ARM_MOTOR_ROTATIONS_PER_360 = (150 * 32) / (16);
+        public static final double FIRST_ARM_ROTATIONS_PER_DEGREE = FIRST_ARM_MOTOR_ROTATIONS_PER_360 / 360.0;
+        public static final double FIRST_ARM_DEGREES_PER_ROTATION = 360.0 / FIRST_ARM_MOTOR_ROTATIONS_PER_360;
+        public static final double SECOND_ARM_ROTATIONS_PER_DEGREE = SECOND_ARM_MOTOR_ROTATIONS_PER_360 / 360.0;
+        public static final double SECOND_ARM_DEGREES_PER_ROTATION = 360.0 / SECOND_ARM_MOTOR_ROTATIONS_PER_360;
         public static final double sg_smartMAXVelocity = 0;
         public static final double sg_smartMAXAcc = 0;
 
 
-        //PID values first arm against gravity
-        public static final double f_kP = 0;
-        public static final double f_kI = 0;
+        //PID values first arm
+        public static final double f_kP = 0.00022;
+        public static final double f_kI = f_kP / 1000.0;
         public static final double f_kD = 0;
         public static final double f_kIz = 0;
-        public static final double f_kFF = 0;
-        public static final double f_kMaxOutput = 0;
-        public static final double f_kMinOutput = 0;
+        public static final double f_kFF = 0.005;
+        public static final double f_kMaxOutput = .75;
+        public static final double f_kMinOutput = -.75;
         public static final double f_maxRPM = 0;
-        public static final double f_smartMAXVelocity = 0;
-        public static final double f_smartMAXAcc = 0;
-        public static final double f_allowedErr = 0;
+        public static final double f_smartMAXVelocity = 180;
+        public static final double f_smartMAXAcc = 60;
+        public static final double f_allowedErr = 0.1;
+        public static final double f_minVelocity = 0;
 
         //PID values first arm wih gravity
         public static final double fg_kP = 0;
@@ -174,17 +175,18 @@ public class Constants {
         public static final double fg_smartMAXAcc = 0;
 
         //PID values first arm against gravity
-        public static final double s_kP = 0;
-        public static final double s_kI = 0;
+        public static final double s_kP = 0.00011;
+        public static final double s_kI = s_kP / 2000;
         public static final double s_kD = 0;
         public static final double s_kIz = 0;
-        public static final double s_kFF = 0;
-        public static final double s_kMaxOutput = 0;
-        public static final double s_kMinOutput = 0;
+        public static final double s_kFF = 0.005;
+        public static final double s_kMaxOutput = .75;
+        public static final double s_kMinOutput = -.75;
         public static final double s_maxRPM = 0;
-        public static final double s_smartMAXVelocity = 0;
-        public static final double s_smartMAXAcc = 0;
-        public static final double s_allowedErr = 0;
+        public static final double s_smartMAXVelocity = 60;
+        public static final double s_smartMAXAcc = 30;
+        public static final double s_allowedErr = 0.1;
+        public static final double s_minVelocity = 0;
 
         //PID values second arm with gravity
         public static final double sg_kP = 0;

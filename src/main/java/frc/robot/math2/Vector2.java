@@ -124,4 +124,8 @@ public class Vector2{
         Matrix rotatedPoints = rotMatrix.matrixMultiply(pointMatrix);
         return new Vector2(rotatedPoints.getItem(0, 0), rotatedPoints.getItem(1, 0));
     }
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }

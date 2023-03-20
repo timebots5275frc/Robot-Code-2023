@@ -7,9 +7,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.teleop.MoveArm;
+import frc.robot.commands.teleop.MoveArmToPoint;
 import frc.robot.commands.teleop.TeleopJoystickDrive;
+import frc.robot.math2.Vector2;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.Arm2;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -24,23 +25,23 @@ public class RobotContainer {
 
   // Subsystems
   Drivetrain drivetrain = new Drivetrain();
-  //Arm arm = new Arm();
-  Arm2 arm = new Arm2();
+  Arm arm = new Arm();
 
   //Joystic
   Joystick driveJoystick = new Joystick(0);
-  //Joystick armJoystick = new Joystick(1);
+  Joystick armJoystick = new Joystick(1);
 
   //Teleop Commands
   TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true);
-  //MoveArm armWhenMove = new MoveArm(arm, armJoystick);
+  MoveArm armWhenMove = new MoveArm(arm, armJoystick);
+  MoveArmToPoint armMoveThing = new MoveArmToPoint(arm, new Vector2(30, 0));
 
   //Auto commands
 
 
   public RobotContainer() {
     drivetrain.setDefaultCommand(drive);
-    //arm.setDefaultCommand(armWhenMove);
+    arm.setDefaultCommand(armWhenMove);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -56,6 +57,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //new JoystickButton(driveJoystick, 9).whileTrue();
+    new JoystickButton(armJoystick, 9).whileTrue(armMoveThing);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
