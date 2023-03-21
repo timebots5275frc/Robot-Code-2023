@@ -49,7 +49,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     drivetrain.setDefaultCommand(drive);
-    arm.setDefaultCommand(armWhenMove);
+    //arm.setDefaultCommand(armWhenMove);
     //armWithVel.setDefaultCommand(moveArmWithVel);
     // Configure the trigger bindings
     configureBindings();
@@ -66,8 +66,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //new JoystickButton(driveJoystick, 9).whileTrue();
-    //ew JoystickButton(armJoystick, 9).whileTrue(armMoveThing);
-    new JoystickButton(armJoystick, 9).toggleOnTrue(openClaw);
+    new JoystickButton(armJoystick, 9).whileTrue(armMoveThing);
+    //new JoystickButton(armJoystick, 9).toggleOnTrue(openClaw);
     new JoystickButton(armJoystick, 10).toggleOnTrue(closeClaw);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 

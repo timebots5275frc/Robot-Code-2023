@@ -131,8 +131,8 @@ public class Constants {
         public static final int FIRST_ARM_CANCODER_ID = 30;
         public static final int SECOND_ARM_CANCODER_ID = 31;
         public static final double ARM_FIRST_PART_LENGTH = 18;
-        public static final double ARM_SECOND_PART_LENGTH = 28;
-        public static final double POINT_MOVEMENT_FACTOR = 0.02;
+        public static final double ARM_SECOND_PART_LENGTH = 35.5;
+        public static final double POINT_MOVEMENT_FACTOR = 0.02 /* Inch per second */ * 8;
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
         public static final double RAD_TO_DEG_RATIO = 180 / Math.PI;
@@ -170,17 +170,17 @@ public class Constants {
 
 
         //PID values first arm
-        public static final double f_kP = 0.00022;
-        public static final double f_kI = 0.00022 / 1000.0;
+        public static final double f_kP = 0.000;
+        public static final double f_kI = 0.000 / 1000.0;
         public static final double f_kD = 0;
         public static final double f_kIz = 0;
-        public static final double f_kFF = 0.005;
+        public static final double f_kFF = 0.02;
         public static final double f_kMaxOutput = .75;
         public static final double f_kMinOutput = -.75;
         public static final double f_maxRPM = 0;
-        public static final double f_smartMAXVelocity = 180;
-        public static final double f_smartMAXAcc = 60;
-        public static final double f_allowedErr = 0.1;
+        public static final double f_smartMAXVelocity = 720;
+        public static final double f_smartMAXAcc = 720;
+        public static final double f_allowedErr = 1;
         public static final double f_minVelocity = 0;
 
         //PID values first arm wih gravity
@@ -197,17 +197,17 @@ public class Constants {
         public static final double fg_smartMAXAcc = 0;
 
         //PID values first arm against gravity
-        public static final double s_kP = 0.00011;
-        public static final double s_kI = s_kP / 2000;
+        public static final double s_kP = 0.000;
+        public static final double s_kI = 0.000 / 2000;
         public static final double s_kD = 0;
         public static final double s_kIz = 0;
-        public static final double s_kFF = 0.005;
+        public static final double s_kFF = 0.02;
         public static final double s_kMaxOutput = .75;
         public static final double s_kMinOutput = -.75;
         public static final double s_maxRPM = 0;
-        public static final double s_smartMAXVelocity = 60;
-        public static final double s_smartMAXAcc = 30;
-        public static final double s_allowedErr = 0.1;
+        public static final double s_smartMAXVelocity = 360;
+        public static final double s_smartMAXAcc = 360;
+        public static final double s_allowedErr = 1;
         public static final double s_minVelocity = 0;
 
         //PID values second arm with gravity

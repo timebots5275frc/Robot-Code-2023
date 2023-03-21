@@ -25,7 +25,7 @@ public class MoveArmToPoint extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.moveArm(point);
+    arm.changeTargetPos(point);
   }
 
   // Called once the command ends or is interrupted.

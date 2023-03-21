@@ -20,6 +20,7 @@ import frc.robot.constants.Constants.ArmConstants;
 import frc.robot.math2.Vector2;
 
 import java.util.List;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.util.ArrayList;
 
 public class Arm extends SubsystemBase {
@@ -176,7 +177,11 @@ public class Arm extends SubsystemBase {
   }
 
   private void getActualFirstArmAngle() {
-    actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
+    if (firstArmCANCoder.getAbsolutePosition() >= -180 && firstArmCANCoder.getAbsolutePosition() <= -100) {
+      actualFirstArmAngle = -firstArmCANCoder.getAbsolutePosition() - ((180 - firstArmCANCoder.getAbsolutePosition()) * 2);
+    } else {
+      actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
+    }
   }
 
   private void getActualSecondArmAngle() {
@@ -216,17 +221,19 @@ public class Arm extends SubsystemBase {
     secondArmEncoder.setPosition(-actualSecondArmAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
   }
 
-  public void moveArm(Vector2 point) {
+  public void changeTargetPos(Vector2 point) {
     Vector2 clampedPoint =  GetClampedPosValue(point);
     targetPos = clampedPoint;
-    moveArm();
+    calculateKinematicsAngles();
+    moveArm(targetFirstArmAngle, targetSecondArmAngle);
   }
   
-
+//amonmg 
   @Override
   public void periodic() {
     if (!moveSequence.isEmpty()) { checkMoveSequence(); }
     SmartDashboard.putNumber("First Arm Mag Encoder", firstArmCANCoder.getAbsolutePosition());
+    SmartDashboard.putNumber("First Arm Code Mag Encoder", (firstArmCANCoder.getAbsolutePosition() <= 180 && firstArmCANCoder.getAbsolutePosition() >= 100) ? -firstArmCANCoder.getAbsolutePosition() - ((180 - firstArmCANCoder.getAbsolutePosition()) * 2) : firstArmCANCoder.getAbsolutePosition() );
     SmartDashboard.putNumber("First Arm Spark Encoder", firstArmEncoder.getPosition());
     SmartDashboard.putNumber("Second Arm Mag Encoder", secondArmCANCoder.getAbsolutePosition());
     SmartDashboard.putNumber("Second Arm Spark Encoder", secondArmEncoder.getPosition());
@@ -288,7 +295,7 @@ public class Arm extends SubsystemBase {
       moveSequence.add(GetClampedPosValue(Vector2.lerp(armPos, pointToGoTo, i / (double)totalPoints)));
     }
 
-    moveArm(moveSequence.get(0));
+    changeTargetPos(moveSequence.get(0));
   }
 
   private void checkMoveSequence()
@@ -302,7 +309,7 @@ public class Arm extends SubsystemBase {
       if (!moveSequence.isEmpty())
       {
         Vector2 nextPoint = moveSequence.get(0);
-        moveArm(nextPoint);
+        changeTargetPos(nextPoint);
       }
     }
   }
