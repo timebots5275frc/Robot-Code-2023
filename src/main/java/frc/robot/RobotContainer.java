@@ -8,9 +8,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.teleop.MoveArm;
 import frc.robot.commands.teleop.MoveArmToPoint;
+import frc.robot.commands.teleop.MoveArmWithVel;
+import frc.robot.commands.teleop.MoveClaw;
 import frc.robot.commands.teleop.TeleopJoystickDrive;
 import frc.robot.math2.Vector2;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmWithVel;
+import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -26,6 +30,8 @@ public class RobotContainer {
   // Subsystems
   Drivetrain drivetrain = new Drivetrain();
   Arm arm = new Arm();
+  Claw claw = new Claw();
+  //ArmWithVel armWithVel = new ArmWithVel();
 
   //Joystic
   Joystick driveJoystick = new Joystick(0);
@@ -35,13 +41,16 @@ public class RobotContainer {
   TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true);
   MoveArm armWhenMove = new MoveArm(arm, armJoystick);
   MoveArmToPoint armMoveThing = new MoveArmToPoint(arm, new Vector2(30, 0));
-
+  MoveClaw closeClaw = new MoveClaw(claw, false);
+  MoveClaw openClaw = new MoveClaw(claw, true);
+  //MoveArmWithVel moveArmWithVel = new MoveArmWithVel(armWithVel, armJoystick);
   //Auto commands
 
 
   public RobotContainer() {
     drivetrain.setDefaultCommand(drive);
     arm.setDefaultCommand(armWhenMove);
+    //armWithVel.setDefaultCommand(moveArmWithVel);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -57,7 +66,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //new JoystickButton(driveJoystick, 9).whileTrue();
-    new JoystickButton(armJoystick, 9).whileTrue(armMoveThing);
+    //ew JoystickButton(armJoystick, 9).whileTrue(armMoveThing);
+    new JoystickButton(armJoystick, 9).toggleOnTrue(openClaw);
+    new JoystickButton(armJoystick, 10).toggleOnTrue(closeClaw);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,

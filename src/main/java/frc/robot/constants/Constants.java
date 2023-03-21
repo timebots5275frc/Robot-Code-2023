@@ -146,10 +146,32 @@ public class Constants {
         public static final double sg_smartMAXVelocity = 0;
         public static final double sg_smartMAXAcc = 0;
 
+        public static final double fv_kP = 0;
+        public static final double fv_kI = 0;
+        public static final double fv_kD = 0;
+        public static final double fv_kIz = 0;
+        public static final double fv_kFF = 0;
+        public static final double fv_maxOutput = 0;
+        public static final double fv_minOutput = 0;
+
+        public static final double backLimit = 45;
+        public static final double frontLimit = -15;
+        public static final double slowRange  = 0;
+        public static final double velFactor = 75;
+        
+        public static final double sv_kP = 0;
+        public static final double sv_kI = 0;
+        public static final double sv_kD = 0;
+        public static final double sv_kIz = 0;
+        public static final double sv_kFF = 0;
+        public static final double sv_maxOutput = 0;
+        public static final double sv_minOutput = 0;
+
+
 
         //PID values first arm
         public static final double f_kP = 0.00022;
-        public static final double f_kI = f_kP / 1000.0;
+        public static final double f_kI = 0.00022 / 1000.0;
         public static final double f_kD = 0;
         public static final double f_kIz = 0;
         public static final double f_kFF = 0.005;
