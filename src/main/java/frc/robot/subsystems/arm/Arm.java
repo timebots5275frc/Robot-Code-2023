@@ -245,7 +245,10 @@ public class Arm extends SubsystemBase {
 
   public Vector2 GetClampedPosValue(Vector2 pos)
   {
-    return Vector2.clampMagnitude(pos, ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH - .5);
+    Vector2 out = pos;
+    if (pos.magnitude() < Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5) { out = pos.normalized().times(Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5);}
+    out = Vector2.clampMagnitude(out, ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH - .5);
+    return out;
 
     /*Vector2 clampedPos = new Vector2(pos.x, pos.y);
     
