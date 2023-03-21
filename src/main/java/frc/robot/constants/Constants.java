@@ -238,5 +238,12 @@ public class Constants {
         public static final double gripperRadius = 7; // inches
         public static final double Move_Sequence_Allowed_Error = 0.5;
         public static final double Move_Points_Per_Inch = 1;
+
+        public static final double farthestBackTargetPos = -14;
+        public static final double bumperFrontXPos = 7;
+        public static final double frontXPos = 20;
+        public static final double robotLargestY = -9;
+        public static final double robotSmallestY = -19.5;
+        public static final double groundSmallestY = -28;
     }
 }
