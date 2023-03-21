@@ -246,6 +246,30 @@ public class Arm extends SubsystemBase {
   public Vector2 GetClampedPosValue(Vector2 pos)
   {
     Vector2 out = pos;
+
+    if (out.x < ArmConstants.farthestBackTargetPos) { out.x = ArmConstants.farthestBackTargetPos; }
+
+    if (out.x < ArmConstants.bumperFrontXPos) // Inside robot
+    {
+      out.y = clampNumber(out.y, ArmConstants.robotSmallestY, ArmConstants.robotLargestY);
+    }
+    else if (out.x < ArmConstants.frontXPos) // Within front bounds
+    {
+      double p = PercentBetweenNumbers(out.x, ArmConstants.bumperFrontXPos, ArmConstants.frontXPos);
+
+      Vector2 bumperDownMax = new Vector2(ArmConstants.bumperFrontXPos, ArmConstants.robotSmallestY);
+      Vector2 bumperUpMax = new Vector2(ArmConstants.bumperFrontXPos, ArmConstants.robotLargestY);
+
+      Vector2 outDownMax = new Vector2(ArmConstants.frontXPos, ArmConstants.groundSmallestY);
+      Vector2 outUpMax = new Vector2(ArmConstants.frontXPos, kinematics.totalDistance());
+
+      out.y = clampNumber(out.y, Vector2.lerp(bumperDownMax, outDownMax, p).y, Vector2.lerp(bumperUpMax, outUpMax, p).y);
+    }
+    else // Outside of front bounds
+    {
+      out.y = clampNumber(out.y, ArmConstants.groundSmallestY, kinematics.totalDistance());
+    }
+
     if (pos.magnitude() < Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5) { out = pos.normalized().times(Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5);}
     out = Vector2.clampMagnitude(out, ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH - .5);
     return out;
@@ -269,6 +293,12 @@ public class Arm extends SubsystemBase {
     }
 
     return new Vector2(-1, -1);*/
+  }
+
+  double clampNumber(double val, double min, double max) {
+    if (val < min) { return min; }
+    else if (val > max) { return max; }
+    return val;
   }
 
   public double PercentBetweenNumbers(double value, double min, double max) {
