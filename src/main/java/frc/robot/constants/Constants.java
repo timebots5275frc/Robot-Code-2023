@@ -245,6 +245,6 @@ public class Constants {
         public static final double frontXPos = 20;
         public static final double robotLargestY = -9;
         public static final double robotSmallestY = -19.5;
-        public static final double groundSmallestY = -28;
+        public static final double groundSmallestY = -27;
     }
 }

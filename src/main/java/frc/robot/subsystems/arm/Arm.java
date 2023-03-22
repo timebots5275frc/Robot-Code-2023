@@ -201,7 +201,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void initializeArm() {
-    targetPos = realArmPosition();
+    targetPos = GetClampedPosValue(realArmPosition());
   }
 
   public void moveArm() {
@@ -277,8 +277,8 @@ public class Arm extends SubsystemBase {
       out.y = clampNumber(out.y, ArmConstants.groundSmallestY, kinematics.totalDistance());
     }
 
-    if (pos.magnitude() < Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5) { out = pos.normalized().times(Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5);}
-    out = Vector2.clampMagnitude(out, Constants.ArmConstants.FARTHEST_EXTENSION_POINT);
+    out = Vector2.clampMagnitude(out, Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH) - .5);
+    out.x = clampNumber(out.x, ArmConstants.farthestBackTargetPos, ArmConstants.FARTHEST_EXTENSION_POINT);
     return out;
 
     /*Vector2 clampedPos = new Vector2(pos.x, pos.y);
