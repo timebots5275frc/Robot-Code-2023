@@ -277,7 +277,9 @@ public class Arm extends SubsystemBase {
       out.y = clampNumber(out.y, ArmConstants.groundSmallestY, kinematics.totalDistance());
     }
 
-    out = Vector2.clampMagnitude(out, Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH) - .5);
+    double theNumber = Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5f;
+    if (out.magnitude() < theNumber) { out = out.normalized().times(theNumber); }
+    out = Vector2.clampMagnitude(out, ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH - .5f);
     out.x = clampNumber(out.x, ArmConstants.farthestBackTargetPos, ArmConstants.FARTHEST_EXTENSION_POINT);
     return out;
 
