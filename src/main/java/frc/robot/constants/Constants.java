@@ -225,7 +225,7 @@ public class Constants {
         //PID loop
         //l
 
-        // Arm Ground Constraints (Relative to arm mount points in inches)
+        // Arm Ground Constraints (Relative to arm mount points in inches) (unused)
         public static final Vector2[] ground_Constraints = { 
         new Vector2(-30.0061, -25.8670), //  Back of motor
         new Vector2(-26.5601, -26.117), //  Far left top of battery mount
@@ -236,15 +236,12 @@ public class Constants {
         new Vector2(-17.0811, -22.5870), //  Right battery
         new Vector2(6.9939, -25.8670), //  Front of bumper
     };
-        public static final double gripperRadius = 7; // inches
-        public static final double Move_Sequence_Allowed_Error = 0.5;
-        public static final double Move_Points_Per_Inch = 1;
 
-        public static final double farthestBackTargetPos = -14;
-        public static final double bumperFrontXPos = 7;
-        public static final double frontXPos = 20;
-        public static final double robotLargestY = -9;
-        public static final double robotSmallestY = -19.5;
-        public static final double groundSmallestY = -27;
+    public static final double farthestBackChassisPos = -14; // On chart: 1, 2
+    public static final double frontOfBumperXPos = 7; // On chart: 3
+    public static final double frontGroundXPos = 15; // On chart: 4
+    public static final double insideChassisLargestY = -16.5; // On chart: 1, 9
+    public static final double insideChassisSmallestY = -21; // On chart: 2, 3
+    public static final double outsideChassisSmallestY = -27; // On chart: 4, 5
     }
 }

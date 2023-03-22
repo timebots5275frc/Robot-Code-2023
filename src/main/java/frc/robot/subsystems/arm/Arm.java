@@ -231,7 +231,7 @@ public class Arm extends SubsystemBase {
 //amonmg 
   @Override
   public void periodic() {
-    if (!moveSequence.isEmpty()) { checkMoveSequence(); }
+    //if (!moveSequence.isEmpty()) { checkMoveSequence(); }
     SmartDashboard.putNumber("First Arm Mag Encoder", firstArmCANCoder.getAbsolutePosition());
     SmartDashboard.putNumber("First Arm Code Mag Encoder", (firstArmCANCoder.getAbsolutePosition() <= 180 && firstArmCANCoder.getAbsolutePosition() >= 100) ? -firstArmCANCoder.getAbsolutePosition() - ((180 - firstArmCANCoder.getAbsolutePosition()) * 2) : firstArmCANCoder.getAbsolutePosition() );
     SmartDashboard.putNumber("First Arm Spark Encoder", firstArmEncoder.getPosition());
@@ -252,56 +252,32 @@ public class Arm extends SubsystemBase {
 
   public Vector2 GetClampedPosValue(Vector2 pos)
   {
-    Vector2 out = pos;
+    Vector2 o = pos;
+    double armDiff = Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH);
+    double farthestArmReach = kinematics.totalDistance();
 
-    if (out.x < ArmConstants.farthestBackTargetPos) { out.x = ArmConstants.farthestBackTargetPos; }
-
-    if (out.x < ArmConstants.bumperFrontXPos) // Inside robot
+    if (o.x < ArmConstants.frontOfBumperXPos) // Inside chassis
     {
-      out.y = clampNumber(out.y, ArmConstants.robotSmallestY, ArmConstants.robotLargestY);
+        if (o.y > ArmConstants.insideChassisLargestY && o.x < 0) { o.y = ArmConstants.insideChassisLargestY; }
+        else if (o.y < ArmConstants.insideChassisSmallestY) { o.y = ArmConstants.insideChassisSmallestY; }
     }
-    else if (out.x < ArmConstants.frontXPos) // Within front bounds
+    else // Outside chassis
     {
-      double p = PercentBetweenNumbers(out.x, ArmConstants.bumperFrontXPos, ArmConstants.frontXPos);
+        double p = PercentBetweenNumbers(o.x, ArmConstants.frontOfBumperXPos, ArmConstants.frontGroundXPos);
+        Vector2 point3 = new Vector2(ArmConstants.frontOfBumperXPos, ArmConstants.insideChassisSmallestY);
+        Vector2 point4 = new Vector2(ArmConstants.frontGroundXPos, ArmConstants.outsideChassisSmallestY);
+        o.y = clampNumber(o.y, Vector2.lerp(point3, point4, p).y, farthestArmReach);
 
-      Vector2 bumperDownMax = new Vector2(ArmConstants.bumperFrontXPos, ArmConstants.robotSmallestY);
-      Vector2 bumperUpMax = new Vector2(ArmConstants.bumperFrontXPos, ArmConstants.robotLargestY);
-
-      Vector2 outDownMax = new Vector2(ArmConstants.frontXPos, ArmConstants.groundSmallestY);
-      Vector2 outUpMax = new Vector2(ArmConstants.frontXPos, kinematics.totalDistance());
-
-      out.y = clampNumber(out.y, Vector2.lerp(bumperDownMax, outDownMax, p).y, Vector2.lerp(bumperUpMax, outUpMax, p).y);
-    }
-    else // Outside of front bounds
-    {
-      out.y = clampNumber(out.y, ArmConstants.groundSmallestY, kinematics.totalDistance());
+        if (o.y < ArmConstants.outsideChassisSmallestY) { o.y = ArmConstants.outsideChassisSmallestY; }
     }
 
-    double theNumber = Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5f;
-    if (out.magnitude() < theNumber) { out = out.normalized().times(theNumber); }
-    out = Vector2.clampMagnitude(out, ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH - .5f);
-    out.x = clampNumber(out.x, ArmConstants.farthestBackTargetPos, ArmConstants.FARTHEST_EXTENSION_POINT);
-    return out;
+    if (o.y >= 0 && o.x < armDiff) { o.x = armDiff; } // Above y=0
 
-    /*Vector2 clampedPos = new Vector2(pos.x, pos.y);
-    
-    Vector2 betweenIndexs = GetConstraintsBetween(pos); // x is first index, y is second index
-    Vector2 diffBetweenPoints = ArmConstants.ground_Constraints[(int)betweenIndexs.x].substract(ArmConstants.ground_Constraints[(int)betweenIndexs.y]);
-    double percentBetweenIndexs = PercentBetweenNumbers(pos.x, ArmConstants.ground_Constraints[(int)betweenIndexs.x].x, ArmConstants.ground_Constraints[(int)betweenIndexs.y].x);
-    Vector2 clampPos = Vector2.lerp(ArmConstants.ground_Constraints[(int)betweenIndexs.x], ArmConstants.ground_Constraints[(int)betweenIndexs.y], percentBetweenIndexs); // Position at the percent (lerped)
-    
-    if (Vector2.distance(pos, clampPos) <= ArmConstants.gripperRadius || clampPos.y > pos.y + ArmConstants.gripperRadius) { clampedPos = clampPos.add(Vector2.clampMagnitude(new Vector2(diffBetweenPoints.y > 0 ? -1 : 1, 1), 1).times(ArmConstants.gripperRadius)); }
-    return Vector2.clampMagnitude(clampedPos, kinematics.totalDistance()); // Clamps  value to total distance of the arm
-  }
+    if (o.magnitude() < armDiff + .5f) { o = o.normalized().times(armDiff + .5f); } // Clamp outside min circle
+    o = Vector2.clampMagnitude(o, farthestArmReach - .5f); // Clamp inside max circle
+    o.x = clampNumber(o.x, ArmConstants.farthestBackChassisPos, ArmConstants.FARTHEST_EXTENSION_POINT); // Clamping between smallest and largest allowed x value
 
-  Vector2 GetConstraintsBetween(Vector2 pos) {
-    for (int i = 0; i < ArmConstants.ground_Constraints.length; i++) {
-      if (ArmConstants.ground_Constraints[i].x < pos.x && i + 1 < ArmConstants.ground_Constraints.length && ArmConstants.ground_Constraints[i + 1].x > pos.x) {
-        return new Vector2(i, i + 1);
-      }
-    }
-
-    return new Vector2(-1, -1);*/
+    return o;
   }
 
   double clampNumber(double val, double min, double max) {
@@ -315,7 +291,7 @@ public class Arm extends SubsystemBase {
     return (value + offset) / (max + offset);
   }
 
-  public void goToPoint(Vector2 pointToGoTo) // for creating move sequence
+  /*public void goToPoint(Vector2 pointToGoTo) // for creating move sequence
   {
     Vector2 armPos = realArmPosition();
     double inchesBetweenPoints = Vector2.distance(armPos, pointToGoTo);
@@ -344,7 +320,7 @@ public class Arm extends SubsystemBase {
         changeTargetPos(nextPoint);
       }
     }
-  }
+  }*/
 
   public Vector2 realArmPosition()
   {
