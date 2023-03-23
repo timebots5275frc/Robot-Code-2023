@@ -278,7 +278,7 @@ public class Arm extends SubsystemBase {
     }
 
     if (pos.magnitude() < Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5) { out = pos.normalized().times(Math.abs(ArmConstants.ARM_FIRST_PART_LENGTH - ArmConstants.ARM_SECOND_PART_LENGTH) + .5);}
-    out = Vector2.clampMagnitude(out, Constants.ArmConstants.FARTHEST_EXTENSION_POINT);
+    out = Vector2.clampMagnitude(out, ArmConstants.ARM_FIRST_PART_LENGTH + ArmConstants.ARM_SECOND_PART_LENGTH - .5);
     return out;
 
     /*Vector2 clampedPos = new Vector2(pos.x, pos.y);

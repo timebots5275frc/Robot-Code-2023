@@ -131,8 +131,7 @@ public class Constants {
         public static final int FIRST_ARM_CANCODER_ID = 30;
         public static final int SECOND_ARM_CANCODER_ID = 31;
         public static final double ARM_FIRST_PART_LENGTH = 18;
-        public static final double ARM_SECOND_PART_LENGTH = 34.5; /*For some reason the X is typically +1 */
-        public static final double FARTHEST_EXTENSION_POINT = 48;
+        public static final double ARM_SECOND_PART_LENGTH = 34.5;
         public static final double POINT_MOVEMENT_FACTOR = 0.02 /* Inch per second */ * 8;
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
