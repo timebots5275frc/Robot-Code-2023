@@ -56,7 +56,7 @@ public class RobotContainer {
 
   //Teleop Commands
   TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true);
-  MoveArm armWhenMove = new MoveArm(arm, armJoystick);
+  MoveArm armWhenMove = new MoveArm(arm, armJoystick, Constants.ArmConstants.ParkingPosList, Constants.ArmConstants.RestingPos, Constants.ArmConstants.GrabFromGroundPos, Constants.ArmConstants.GrabFromStationPos, Constants.ArmConstants.PlaceOnGroundPos, Constants.ArmConstants.PlaceOnSecondPos, Constants.ArmConstants.PlaceOnThirdPos);
   //MoveArmToPoint armMoveThing = new MoveArmToPoint(arm, new Vector2(30, 0));
   MoveClaw closeClaw = new MoveClaw(claw, false);
   MoveClaw openClaw = new MoveClaw(claw, true);
