@@ -177,11 +177,11 @@ public class Arm extends SubsystemBase {
   }
 
   private void getActualFirstArmAngle() {
-    if (firstArmCANCoder.getAbsolutePosition() >= -180 && firstArmCANCoder.getAbsolutePosition() <= -100) {
-      actualFirstArmAngle = -firstArmCANCoder.getAbsolutePosition() - ((180 - firstArmCANCoder.getAbsolutePosition()) * 2);
-    } else {
-      actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
-    }
+    if (firstArmCANCoder.getAbsolutePosition() > -60 && firstArmCANCoder.getAbsolutePosition() <= 180) {
+       actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
+  } else {
+       actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;/*-firstAngle + ((180 + firstAngle) * 2); */
+  }
   }
 
   private void getActualSecondArmAngle() {
@@ -202,6 +202,7 @@ public class Arm extends SubsystemBase {
 
   public void initializeArm() {
     targetPos = realArmPosition();
+     
   }
 
   public void moveArm() {
@@ -231,16 +232,35 @@ public class Arm extends SubsystemBase {
 //amonmg 
   @Override
   public void periodic() {
+
+    Vector2 silly = realArmPosition();
+    double calculatedAngle;
+    if (firstArmCANCoder.getAbsolutePosition() > 0 && silly.x < 0) {
+      calculatedAngle = firstArmCANCoder.getAbsolutePosition();
+    } else {
+      calculatedAngle = -firstArmCANCoder.getAbsolutePosition() + ((180 + firstArmCANCoder.getAbsolutePosition()) * 2);
+    }
     if (!moveSequence.isEmpty()) { checkMoveSequence(); }
+    double adjustedFirstArmAngle;
+    if (firstArmCANCoder.getAbsolutePosition() > -60 && firstArmCANCoder.getAbsolutePosition() <= 180) {
+      adjustedFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
+  } else {
+      adjustedFirstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;/*-firstAngle + ((180 + firstAngle) * 2); */
+  }
+
+
     SmartDashboard.putNumber("First Arm Mag Encoder", firstArmCANCoder.getAbsolutePosition());
-    SmartDashboard.putNumber("First Arm Code Mag Encoder", (firstArmCANCoder.getAbsolutePosition() <= 180 && firstArmCANCoder.getAbsolutePosition() >= 100) ? -firstArmCANCoder.getAbsolutePosition() - ((180 - firstArmCANCoder.getAbsolutePosition()) * 2) : firstArmCANCoder.getAbsolutePosition() );
+    SmartDashboard.putNumber("Calculated angle", calculatedAngle);
+    SmartDashboard.putNumber("Actual First Arm Angle", adjustedFirstArmAngle);
+
+    SmartDashboard.putNumber("Real current rots", actualFirstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
     SmartDashboard.putNumber("First Arm Spark Encoder", firstArmEncoder.getPosition());
     SmartDashboard.putNumber("Second Arm Mag Encoder", secondArmCANCoder.getAbsolutePosition());
     SmartDashboard.putNumber("Second Arm Spark Encoder", secondArmEncoder.getPosition());
     SmartDashboard.putString("Target Position", targetPos.toString());
     SmartDashboard.putString("Current Position", realArmPosition().toString());
     SmartDashboard.putNumber("First Arm target rotations", targetFirstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
-    SmartDashboard.putNumber("Second Arm target rotations", -targetSecondArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
+    SmartDashboard.putNumber("Second Arm target rotations", -targetSecondArmAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
     SmartDashboard.putNumber("First Arm target degrees", targetFirstArmAngle);
     SmartDashboard.putNumber("Second Arm target degrees", targetSecondArmAngle);
     SmartDashboard.putNumber("First Arm output current", firstArmController.getOutputCurrent());

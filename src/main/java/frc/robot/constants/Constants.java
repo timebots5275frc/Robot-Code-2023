@@ -132,7 +132,7 @@ public class Constants {
         public static final int SECOND_ARM_CANCODER_ID = 31;
         public static final double ARM_FIRST_PART_LENGTH = 18;
         public static final double ARM_SECOND_PART_LENGTH = 34.5;
-        public static final double POINT_MOVEMENT_FACTOR = 0.02 /* Inch per second */ * 8;
+        public static final double POINT_MOVEMENT_FACTOR = 0.02 /* Inch per second */ * 1;
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
         public static final double RAD_TO_DEG_RATIO = 180 / Math.PI;
@@ -174,7 +174,7 @@ public class Constants {
         public static final double f_kI = 0.000 / 1000.0;
         public static final double f_kD = 0;
         public static final double f_kIz = 0;
-        public static final double f_kFF = 0.02;
+        public static final double f_kFF = 0.005;
         public static final double f_kMaxOutput = .75;
         public static final double f_kMinOutput = -.75;
         public static final double f_maxRPM = 0;
@@ -243,7 +243,7 @@ public class Constants {
         public static final double bumperFrontXPos = 7;
         public static final double frontXPos = 20;
         public static final double robotLargestY = -9;
-        public static final double robotSmallestY = -19.5;
+        public static final double robotSmallestY = -27;
         public static final double groundSmallestY = -28;
     }
 }
