@@ -189,44 +189,37 @@ public class Arm extends SubsystemBase {
     actualSecondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
-  public void moveTargetPoint(double joystickValue, double joystickValue2, Joystick joy, ArrayList<Vector2> parkingPos, Vector2 restingPos, Vector2 groundPickup, Vector2 stationPickup, Vector2 groundDrop, Vector2 secondDrop, Vector2 thirdDrop) {
+  public void moveTargetPoint(double joystickValue, double joystickValue2, Joystick joy, ArrayList<Vector2> parkingPos, ArrayList<Vector2> restingPos, ArrayList<Vector2> groundPickup, ArrayList<Vector2> stationPickup, ArrayList<Vector2> groundDrop, ArrayList<Vector2> secondDrop, ArrayList<Vector2> thirdDrop) {
     //if (!moveSequence.isEmpty()) { moveSequence.clear(); }
 
     if (joy.getRawButtonPressed(1)) {
-      Vector2 compareablePos = realArmPosition();
-      int count = 0;
-      for (int i = parkingPos.size() - 1; i > 1; i--) {
-        if (parkingPos.get(i).x > realArmPosition().x && parkingPos.get(i).x < realArmPosition().x) {
-          count = i;
+      Vector2 comparablePose = realArmPosition();
+      double smallestDistance = Math.abs(Vector2.distance(comparablePose, parkingPos.get((parkingPos.size() - 1))));
+      for (int i = 0; i < parkingPos.size(); i++) {
+        if (Math.abs(Vector2.distance(comparablePose, parkingPos.get(i))) < smallestDistance) {
+          smallestDistance = Math.abs(Vector2.distance(comparablePose, parkingPos.get(i)));
         }
       }
-      targetPos = parkingPos.get(0);
-      while (count < parkingPos.size()) {
-        if ((realArmPosition().x < targetPos.x - 0.5 && realArmPosition().x > targetPos.x + 0.5) && (realArmPosition().y < targetPos.x - 0.5 && realArmPosition().y > targetPos.y + 0.5)) {
-          count++;
-          targetPos = parkingPos.get(count);
-          Vector2 normalizedVector = GetClampedPosValue(targetPos);
-          targetPos = normalizedVector;
-        }
-      }
-    } else if (joy.getRawButtonPressed(1)) {
-      Vector2 normalizedVector = GetClampedPosValue(restingPos);
-      targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(2)) {
-      Vector2 normalizedVector = GetClampedPosValue(groundPickup);
-      targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(3)) {
-      Vector2 normalizedVector = GetClampedPosValue(stationPickup);
-      targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(4)) {
-      Vector2 normalizedVector = GetClampedPosValue(groundDrop);
-      targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(5)) {
-      Vector2 normalizedVector = GetClampedPosValue(secondDrop);
-      targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(6)) {
-      Vector2 normalizedVector = GetClampedPosValue(thirdDrop);
-      targetPos = normalizedVector;
+      
+
+    } else if (joy.getRawButtonPressed(12)) {
+      // Vector2 normalizedVector = GetClampedPosValue(restingPos);
+      // targetPos = normalizedVector;
+    } else if (joy.getRawButtonPressed(8)) {
+      // Vector2 normalizedVector = GetClampedPosValue(groundPickup);
+      // targetPos = normalizedVector;
+    } else if (joy.getRawButtonPressed(10)) {
+      // Vector2 normalizedVector = GetClampedPosValue(stationPickup);
+      // targetPos = normalizedVector;
+    } else if (joy.getRawButtonPressed(7)) {
+      // Vector2 normalizedVector = GetClampedPosValue(groundDrop);
+      // targetPos = normalizedVector;
+    } else if (joy.getRawButtonPressed(9)) {
+      // Vector2 normalizedVector = GetClampedPosValue(secondDrop);
+      // targetPos = normalizedVector;
+    } else if (joy.getRawButtonPressed(11)) {
+      // Vector2 normalizedVector = GetClampedPosValue(thirdDrop);
+      // targetPos = normalizedVector;
     } else {
     targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
@@ -240,6 +233,7 @@ public class Arm extends SubsystemBase {
 
   public void initializeArm() {
     targetPos = realArmPosition();
+
      
   }
 

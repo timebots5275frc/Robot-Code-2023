@@ -45,11 +45,6 @@ public class TeleopJoystickDrive extends CommandBase {
         addRequirements(_subsystem);
     }
 
-    public void SetFieldRelative(boolean setboolfieldRelative) {
-        System.out.println("SetFieldRelative = " + setboolfieldRelative);
-        this.fieldRelative = setboolfieldRelative;
-    }
-
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {

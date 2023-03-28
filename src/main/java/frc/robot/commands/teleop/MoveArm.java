@@ -18,14 +18,14 @@ public class MoveArm extends CommandBase {
   double secondAngle;
   boolean usingAngle;
   ArrayList<Vector2> parkingPos;
-  Vector2 restingPos;
-  Vector2 groundPickup;
-  Vector2 stationPickup;
-  Vector2 groundDrop;
-  Vector2 secondDrop;
-  Vector2 thirdDrop;
+  ArrayList<Vector2> restingPos;
+  ArrayList<Vector2> groundPickup;
+  ArrayList<Vector2> stationPickup;
+  ArrayList<Vector2> groundDrop;
+  ArrayList<Vector2> secondDrop;
+  ArrayList<Vector2> thirdDrop;
 
-  public MoveArm(Arm _arm, Joystick _joystick, ArrayList<Vector2> parkingPos, Vector2 restingPos, Vector2 groundPickup, Vector2 stationPickup, Vector2 groundDrop, Vector2 secondDrop, Vector2 thirdDrop) {
+  public MoveArm(Arm _arm, Joystick _joystick, ArrayList<Vector2> parkingPos, ArrayList<Vector2> restingPos, ArrayList<Vector2> groundPickup, ArrayList<Vector2> stationPickup, ArrayList<Vector2> groundDrop, ArrayList<Vector2> secondDrop, ArrayList<Vector2> thirdDrop) {
     arm = _arm;
     joystick = _joystick;
     this.addRequirements(arm);

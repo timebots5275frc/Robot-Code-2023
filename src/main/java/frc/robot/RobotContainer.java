@@ -56,7 +56,7 @@ public class RobotContainer {
 
   //Teleop Commands
   TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true);
-  MoveArm armWhenMove = new MoveArm(arm, armJoystick, Constants.ArmConstants.ParkingPosList, Constants.ArmConstants.RestingPos, Constants.ArmConstants.GrabFromGroundPos, Constants.ArmConstants.GrabFromStationPos, Constants.ArmConstants.PlaceOnGroundPos, Constants.ArmConstants.PlaceOnSecondPos, Constants.ArmConstants.PlaceOnThirdPos);
+  MoveArm armWhenMove = new MoveArm(arm, armJoystick, Constants.ArmConstants.ParkingPos, Constants.ArmConstants.RestingPos, Constants.ArmConstants.GrabFromGroundPos, Constants.ArmConstants.GrabFromStationPos, Constants.ArmConstants.PlaceOnGroundPos, Constants.ArmConstants.PlaceOnSecondPos, Constants.ArmConstants.PlaceOnThirdPos);
   //MoveArmToPoint armMoveThing = new MoveArmToPoint(arm, new Vector2(30, 0));
   MoveClaw closeClaw = new MoveClaw(claw, false);
   MoveClaw openClaw = new MoveClaw(claw, true);
@@ -85,8 +85,8 @@ public class RobotContainer {
     //new JoystickButton(driveJoystick, 9).whileTrue();
     new JoystickButton(driveJoystick, 8).onTrue(resetGyro);
     //new JoystickButton(armJoystick, 9).whileTrue(armMoveThing);
-    //new JoystickButton(armJoystick, 11).toggleOnTrue(openClaw);
-    //new JoystickButton(armJoystick, 12).toggleOnTrue(closeClaw);
+    new JoystickButton(armJoystick, 3).toggleOnTrue(openClaw);
+    new JoystickButton(armJoystick, 4).toggleOnTrue(closeClaw);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
@@ -99,8 +99,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
-  private Command makeSingleShotAutoCommand() {
-    System.out.println("makeSingleShotAutoCommand");
+  private Command DropConeAndTaxi() {
+    System.out.println("DropConeAndTaxi");
     ProfiledPIDController thetaController = new ProfiledPIDController(Constants.AutoConstants.kPThetaController,
     0, 0, Constants.AutoConstants.kThetaControllerConstraints);
     PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
@@ -113,11 +113,11 @@ public class RobotContainer {
                     // Add kinematics to ensure max speed is actually obeyed
                     .setKinematics(drivetrain.kinematics);
 
-    config.setReversed(true);
+    config.setReversed(false);
 
     // An example trajectory to follow. All units in meters.
     List<Pose2d> list = List.of(new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-            new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
+            new Pose2d(1.15, 0, Rotation2d.fromDegrees(0)));
 
     Trajectory exampleTrajectory = Drivetrain.generateTrajectory(config, list);
 
@@ -134,6 +134,6 @@ public class RobotContainer {
     return swerveControllerCommand.andThen(() -> drivetrain.drive(0, 0, 0, false));
 }
   public Command getAutonomousCommand() {
-      return makeSingleShotAutoCommand();
+      return DropConeAndTaxi();
   }
 }

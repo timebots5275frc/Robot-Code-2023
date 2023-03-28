@@ -61,6 +61,10 @@ public class Drivetrain extends SubsystemBase {
 
     private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(kinematics, this.getHeading(), modulePositions);
 
+
+    private double getOdometryUpdate;
+
+
     public Drivetrain() {
         System.out.println("DriveTrain (:");
 
@@ -70,6 +74,7 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         this.updateOdometry();
         SmartDashboard.putNumber("getHeading", getHeading().getDegrees());
+        SmartDashboard.putNumber("Odometry Update Degrees", getOdometryUpdate);
     }
 
     /**
@@ -83,6 +88,7 @@ public class Drivetrain extends SubsystemBase {
      */
     @SuppressWarnings("ParameterName")
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+        System.out.println("Driving at " + xSpeed + " " + ySpeed);
 
         SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, this.getHeading())
@@ -92,6 +98,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("odometry getY", m_odometry.getPoseMeters().getY());
         SmartDashboard.putString("odometry getRotation",
                 m_odometry.getPoseMeters().getRotation().toString());
+        
 
         // SmartDashboard.putNumber("LeftFrontSpeed",
         // swerveModuleStates[0].speedMetersPerSecond );
@@ -120,6 +127,7 @@ public class Drivetrain extends SubsystemBase {
     /** Updates the field relative position of the robot. */
     public void updateOdometry() {
         m_odometry.update(this.getHeading(), modulePositions);
+        getOdometryUpdate = this.getHeading().getDegrees();
 
     }
 
@@ -170,6 +178,7 @@ public class Drivetrain extends SubsystemBase {
     public Rotation2d getHeading() {
 
         Rotation2d heading = Rotation2d.fromDegrees(gyroPigeon2.getYaw());
+
 
         // System.out.println( "getYComplementaryAngle = " + heading );
         // System.out.println( "getXComplementaryAngle = " +
