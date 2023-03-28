@@ -1,6 +1,4 @@
 package frc.robot.subsystems.arm;
-
-import frc.robot.constants.Constants;
 import frc.robot.math2.Vector2;
 
 public class TwoJointInverseKinematics {
@@ -17,16 +15,9 @@ public class TwoJointInverseKinematics {
     {
         double firstAngle;
         double distance = Vector2.distance(Vector2.zero, target);
-        // if (target.x >= 0) {
-            firstAngle = -((Math.atan2(target.y, target.x) - lawOfCosines(firstJointLength, distance, secondJointLength)) * 180/Math.PI);
-        // } else {
-        //     firstAngle = -( 180 + (Math.atan2(target.y, target.x) - lawOfCosines(firstJointLength, distance, secondJointLength)) * 180/Math.PI);
-        //     // if (firstAngle > 0) {
-        //     //     return firstAngle;
-        //     // } else {
-        //     //     return -firstAngle + ((180 + firstAngle) * 2);
-        //     // }
-        // }
+
+        firstAngle = -((Math.atan2(target.y, target.x) - lawOfCosines(firstJointLength, distance, secondJointLength)) * 180/Math.PI);
+
         return firstAngle;
     }
 
