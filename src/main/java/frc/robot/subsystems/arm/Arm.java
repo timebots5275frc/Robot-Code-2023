@@ -197,13 +197,13 @@ public class Arm extends SubsystemBase {
 
   void checkPresetMoveSequenceButtons(Joystick joy)
   {
-    if (joy.getRawButtonPressed(1)) { currentMoveSequence = Constants.ArmConstants.ParkingPos; } 
-    else if (joy.getRawButtonPressed(12)) { currentMoveSequence = Constants.ArmConstants.RestingPos; } 
-    else if (joy.getRawButtonPressed(8)) { currentMoveSequence = Constants.ArmConstants.GrabFromGroundPos; } 
-    else if (joy.getRawButtonPressed(10)) { currentMoveSequence = Constants.ArmConstants.GrabFromStationPos;  }
-    else if (joy.getRawButtonPressed(7)) { currentMoveSequence = Constants.ArmConstants.PlaceOnGroundPos; } 
-    else if (joy.getRawButtonPressed(9)) { currentMoveSequence = Constants.ArmConstants.PlaceOnSecondPos; } 
-    else if (joy.getRawButtonPressed(11)) { currentMoveSequence = Constants.ArmConstants.PlaceOnThirdPos; }
+    if (joy.getRawButtonPressed(1)) { setNewMoveSequence(Constants.ArmConstants.ParkingPos); } 
+    else if (joy.getRawButtonPressed(12)) { setNewMoveSequence(Constants.ArmConstants.RestingPos); } 
+    else if (joy.getRawButtonPressed(8)) { setNewMoveSequence(Constants.ArmConstants.GrabFromGroundPos); } 
+    else if (joy.getRawButtonPressed(10)) { setNewMoveSequence(Constants.ArmConstants.GrabFromStationPos);  }
+    else if (joy.getRawButtonPressed(7)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnGroundPos); } 
+    else if (joy.getRawButtonPressed(9)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnSecondPos); } 
+    else if (joy.getRawButtonPressed(11)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnThirdPos); }
   }
 
   void setNewMoveSequence(ArrayList<Vector2> newSequence)
