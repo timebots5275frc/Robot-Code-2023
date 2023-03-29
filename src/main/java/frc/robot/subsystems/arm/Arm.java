@@ -45,8 +45,6 @@ public class Arm extends SubsystemBase {
 
   private double sg_kP, sg_kI, sg_kD, sg_kIz, sg_kFF, sg_kMaxOutput, sg_kMinOutput, sg_maxRPM, sg_smartMAXVelocity,
   sg_smartMAXAcc, sg_allowedErr;
-
-  private boolean over;
   
   public Vector2 targetPos = new Vector2(0, 0); // Change to set default pos
   private double targetFirstArmAngle;
@@ -55,9 +53,8 @@ public class Arm extends SubsystemBase {
   private double actualSecondArmAngle;
   private TwoJointInverseKinematics kinematics;
 
-
-
-  private List<Vector2> moveSequence;
+  private ArrayList<Vector2> currentMoveSequence;
+  private int moveSequenceIndex;
 
   public Arm() {
     firstArmController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -71,7 +68,6 @@ public class Arm extends SubsystemBase {
     secondArmCANCoder = new CANCoder(Constants.ArmConstants.SECOND_ARM_CANCODER_ID);
     firstArmEncoder.setPositionConversionFactor(1);
     secondArmEncoder.setPositionConversionFactor(1);
-
 
     //PID Values
     f_kP = Constants.ArmConstants.f_kP;
@@ -165,11 +161,6 @@ public class Arm extends SubsystemBase {
     secondArmPID.setSmartMotionMaxVelocity(sg_smartMAXVelocity, 1);
     secondArmPID.setSmartMotionMaxAccel(sg_smartMAXAcc, 1);
     secondArmPID.setSmartMotionAllowedClosedLoopError(sg_allowedErr, 1);
-
-    moveSequence = new ArrayList<Vector2>();
-
-    //Logging yippee
-    over = true;
   }
 
   private void calculateKinematicsAngles() {
@@ -180,61 +171,62 @@ public class Arm extends SubsystemBase {
   private void getActualFirstArmAngle() {
     if (firstArmCANCoder.getAbsolutePosition() > -60 && firstArmCANCoder.getAbsolutePosition() <= 180) {
        actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
-  } else {
-       actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;/*-firstAngle + ((180 + firstAngle) * 2); */
-  }
+    } else {
+       actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;
+    }
   }
 
   private void getActualSecondArmAngle() {
     actualSecondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
-  public void moveTargetPoint(double joystickValue, double joystickValue2, Joystick joy, ArrayList<Vector2> parkingPos, ArrayList<Vector2> restingPos, ArrayList<Vector2> groundPickup, ArrayList<Vector2> stationPickup, ArrayList<Vector2> groundDrop, ArrayList<Vector2> secondDrop, ArrayList<Vector2> thirdDrop) {
-    //if (!moveSequence.isEmpty()) { moveSequence.clear(); }
+  public void getInput(double joystickValue, double joystickValue2, Joystick joy) {
+    checkPresetMoveSequenceButtons(joy);
+    if (currentMoveSequence.size() == 0) { moveTargetWithJoystick(joystickValue, joystickValue2); }
+    else {}
+  }
 
-    if (joy.getRawButtonPressed(1)) {
-      Vector2 comparablePose = realArmPosition();
-      double smallestDistance = Math.abs(Vector2.distance(comparablePose, parkingPos.get((parkingPos.size() - 1))));
-      for (int i = 0; i < parkingPos.size(); i++) {
-        if (Math.abs(Vector2.distance(comparablePose, parkingPos.get(i))) < smallestDistance) {
-          smallestDistance = Math.abs(Vector2.distance(comparablePose, parkingPos.get(i)));
-        }
-      }
-      
-
-    } else if (joy.getRawButtonPressed(12)) {
-      // Vector2 normalizedVector = GetClampedPosValue(restingPos);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(8)) {
-      // Vector2 normalizedVector = GetClampedPosValue(groundPickup);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(10)) {
-      // Vector2 normalizedVector = GetClampedPosValue(stationPickup);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(7)) {
-      // Vector2 normalizedVector = GetClampedPosValue(groundDrop);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(9)) {
-      // Vector2 normalizedVector = GetClampedPosValue(secondDrop);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(11)) {
-      // Vector2 normalizedVector = GetClampedPosValue(thirdDrop);
-      // targetPos = normalizedVector;
-    } else {
+  public void moveTargetWithJoystick(double joystickValue, double joystickValue2) {
     targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    
     
     // Sus Clamping Ahhhhhh
     Vector2 normalizedVector = GetClampedPosValue(targetPos);
     targetPos = normalizedVector;
+  }
+
+  void checkPresetMoveSequenceButtons(Joystick joy)
+  {
+    if (joy.getRawButtonPressed(1)) { currentMoveSequence = Constants.ArmConstants.ParkingPos; } 
+    else if (joy.getRawButtonPressed(12)) { currentMoveSequence = Constants.ArmConstants.RestingPos; } 
+    else if (joy.getRawButtonPressed(8)) { currentMoveSequence = Constants.ArmConstants.GrabFromGroundPos; } 
+    else if (joy.getRawButtonPressed(10)) { currentMoveSequence = Constants.ArmConstants.GrabFromStationPos;  }
+    else if (joy.getRawButtonPressed(7)) { currentMoveSequence = Constants.ArmConstants.PlaceOnGroundPos; } 
+    else if (joy.getRawButtonPressed(9)) { currentMoveSequence = Constants.ArmConstants.PlaceOnSecondPos; } 
+    else if (joy.getRawButtonPressed(11)) { currentMoveSequence = Constants.ArmConstants.PlaceOnThirdPos; }
+  }
+
+  void setNewMoveSequence(ArrayList<Vector2> newSequence)
+  {
+    Vector2 armPos = realArmPosition();
+    currentMoveSequence = newSequence;
+
+    int closestPointIndex = -1;
+
+    for (int i = 0; i < currentMoveSequence.size(); i++) {
+      double distanceFromCurrentPoint = Vector2.distance(currentMoveSequence.get(i), armPos);
+
+      if (closestPointIndex == -1 || distanceFromCurrentPoint < Vector2.distance(currentMoveSequence.get(closestPointIndex), armPos))
+      {
+        closestPointIndex = i;
+      }
     }
+
+    moveSequenceIndex = closestPointIndex;
   }
 
   public void initializeArm() {
     targetPos = realArmPosition();
-
-     
   }
 
   public void moveArm() {
@@ -261,45 +253,25 @@ public class Arm extends SubsystemBase {
     moveArm(targetFirstArmAngle, targetSecondArmAngle);
   }
   
-//amonmg 
   @Override
   public void periodic() {
 
-    Vector2 silly = realArmPosition();
+    Vector2 armPos = realArmPosition();
     double calculatedAngle;
-    if (firstArmCANCoder.getAbsolutePosition() > 0 && silly.x < 0) {
+    if (firstArmCANCoder.getAbsolutePosition() > 0 && armPos.x < 0) {
       calculatedAngle = firstArmCANCoder.getAbsolutePosition();
     } else {
       calculatedAngle = -firstArmCANCoder.getAbsolutePosition() + ((180 + firstArmCANCoder.getAbsolutePosition()) * 2);
     }
-    if (!moveSequence.isEmpty()) { checkMoveSequence(); }
+
     double adjustedFirstArmAngle;
     if (firstArmCANCoder.getAbsolutePosition() > -60 && firstArmCANCoder.getAbsolutePosition() <= 180) {
       adjustedFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
-  } else {
-      adjustedFirstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;/*-firstAngle + ((180 + firstAngle) * 2); */
-  }
+    } else {
+      adjustedFirstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;
+    }
 
-
-    SmartDashboard.putNumber("First Arm Mag Encoder", firstArmCANCoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Calculated angle", calculatedAngle);
-    SmartDashboard.putNumber("Actual First Arm Angle", adjustedFirstArmAngle);
-
-    SmartDashboard.putNumber("Real current rots", actualFirstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
-    SmartDashboard.putNumber("First Arm Spark Encoder", firstArmEncoder.getPosition());
-    SmartDashboard.putNumber("Second Arm Mag Encoder", secondArmCANCoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Second Arm Spark Encoder", secondArmEncoder.getPosition());
-    SmartDashboard.putString("Target Position", targetPos.toString());
-    SmartDashboard.putString("Current Position", realArmPosition().toString());
-    SmartDashboard.putNumber("First Arm target rotations", targetFirstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
-    SmartDashboard.putNumber("Second Arm target rotations", -targetSecondArmAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
-    SmartDashboard.putNumber("First Arm target degrees", targetFirstArmAngle);
-    SmartDashboard.putNumber("Second Arm target degrees", targetSecondArmAngle);
-    SmartDashboard.putNumber("First Arm output current", firstArmController.getOutputCurrent());
-    SmartDashboard.putNumber("Second Arm output current", secondArmController.getOutputCurrent());
-    SmartDashboard.putNumber("First Arm Current Rotations", firstArmEncoder.getPosition());
-    SmartDashboard.putNumber("Second Arm Current Rotations", secondArmEncoder.getPosition());
-
+    LogSmartDashboard(calculatedAngle, adjustedFirstArmAngle);
   }
 
   public Vector2 GetClampedPosValue(Vector2 pos)
@@ -343,37 +315,6 @@ public class Arm extends SubsystemBase {
     return (value + offset) / (max + offset);
   }
 
-  public void goToPoint(Vector2 pointToGoTo) // for creating move sequence
-  {
-    Vector2 armPos = realArmPosition();
-    double inchesBetweenPoints = Vector2.distance(armPos, pointToGoTo);
-    int totalPoints = (int)Math.ceil(inchesBetweenPoints * ArmConstants.Move_Points_Per_Inch);
-    moveSequence.clear();
-
-    for (int i = 0; i <= totalPoints; i++)
-    {
-      moveSequence.add(GetClampedPosValue(Vector2.lerp(armPos, pointToGoTo, i / (double)totalPoints)));
-    }
-
-    changeTargetPos(moveSequence.get(0));
-  }
-
-  private void checkMoveSequence()
-  {
-    Vector2 armPos = realArmPosition();
-
-    if (Vector2.distance(armPos, moveSequence.get(0)) <= ArmConstants.Move_Sequence_Allowed_Error)
-    {
-      moveSequence.remove(0);
-
-      if (!moveSequence.isEmpty())
-      {
-        Vector2 nextPoint = moveSequence.get(0);
-        changeTargetPos(nextPoint);
-      }
-    }
-  }
-
   public Vector2 realArmPosition()
   {
     getActualFirstArmAngle();
@@ -384,5 +325,27 @@ public class Arm extends SubsystemBase {
     Vector2 thisPos = firstArmPos.add(secondArmPos);
     thisPos.y *= -1;
     return thisPos;
+  }
+
+  void LogSmartDashboard(double calculatedAngle, double adjustedFirstArmAngle)
+  {
+    SmartDashboard.putNumber("First Arm Mag Encoder", firstArmCANCoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Calculated angle", calculatedAngle);
+    SmartDashboard.putNumber("Actual First Arm Angle", adjustedFirstArmAngle);
+
+    SmartDashboard.putNumber("Real current rots", actualFirstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
+    SmartDashboard.putNumber("First Arm Spark Encoder", firstArmEncoder.getPosition());
+    SmartDashboard.putNumber("Second Arm Mag Encoder", secondArmCANCoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Second Arm Spark Encoder", secondArmEncoder.getPosition());
+    SmartDashboard.putString("Target Position", targetPos.toString());
+    SmartDashboard.putString("Current Position", realArmPosition().toString());
+    SmartDashboard.putNumber("First Arm target rotations", targetFirstArmAngle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE);
+    SmartDashboard.putNumber("Second Arm target rotations", -targetSecondArmAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
+    SmartDashboard.putNumber("First Arm target degrees", targetFirstArmAngle);
+    SmartDashboard.putNumber("Second Arm target degrees", targetSecondArmAngle);
+    SmartDashboard.putNumber("First Arm output current", firstArmController.getOutputCurrent());
+    SmartDashboard.putNumber("Second Arm output current", secondArmController.getOutputCurrent());
+    SmartDashboard.putNumber("First Arm Current Rotations", firstArmEncoder.getPosition());
+    SmartDashboard.putNumber("Second Arm Current Rotations", secondArmEncoder.getPosition());
   }
 }
