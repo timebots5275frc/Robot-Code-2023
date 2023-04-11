@@ -1,7 +1,5 @@
 package frc.robot.math2;
 
-import javax.swing.text.View;
-
 import frc.robot.constants.Constants.ArmConstants;
 
 public class Vector2{

@@ -7,17 +7,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ResetGyro;
 import frc.robot.commands.teleop.MoveArm;
 import frc.robot.commands.teleop.MoveArmToPoint;
-import frc.robot.commands.teleop.MoveArmWithVel;
 import frc.robot.commands.teleop.MoveClaw;
 import frc.robot.commands.teleop.TeleopJoystickDrive;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.AutoConstants;
 import frc.robot.math2.Vector2;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmWithVel;
 import frc.robot.subsystems.claw.Claw;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import pabeles.concurrency.ConcurrencyOps.Reset;
@@ -51,9 +48,6 @@ public class RobotContainer {
   Joystick driveJoystick = new Joystick(0);
   Joystick armJoystick = new Joystick(1);
 
-  //Comands
-  ResetGyro resetGyro = new ResetGyro(drivetrain);
-
   //Teleop Commands
   TeleopJoystickDrive drive = new TeleopJoystickDrive(drivetrain, driveJoystick, null, true);
   MoveArm armWhenMove = new MoveArm(arm, armJoystick, Constants.ArmConstants.ParkingPos, Constants.ArmConstants.RestingPos, Constants.ArmConstants.GrabFromGroundPos, Constants.ArmConstants.GrabFromStationPos, Constants.ArmConstants.PlaceOnGroundPos, Constants.ArmConstants.PlaceOnSecondPos, Constants.ArmConstants.PlaceOnThirdPos);
@@ -82,15 +76,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    //new JoystickButton(driveJoystick, 9).whileTrue();
-    new JoystickButton(driveJoystick, 8).onTrue(resetGyro);
-    //new JoystickButton(armJoystick, 9).whileTrue(armMoveThing);
     new JoystickButton(armJoystick, 3).toggleOnTrue(openClaw);
     new JoystickButton(armJoystick, 4).toggleOnTrue(closeClaw);
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
   }
 
   /**
