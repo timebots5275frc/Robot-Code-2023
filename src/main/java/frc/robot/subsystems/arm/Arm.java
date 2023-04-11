@@ -225,6 +225,23 @@ public class Arm extends SubsystemBase {
     moveSequenceIndex = closestPointIndex;
   }
 
+  void checkMoveSequence()
+  {
+    if (currentMoveSequence.size() > 0)
+    {
+      Vector2 currentTargetPoint = currentMoveSequence.get(moveSequenceIndex);
+      Vector2 currentArmPos = realArmPosition();
+
+      if (!targetPos.equals(currentTargetPoint)) { changeTargetPos(currentTargetPoint); }
+
+      if (Vector2.distance(currentTargetPoint, currentArmPos) <= ArmConstants.Move_Sequence_Allowed_Error) 
+      {
+        if (moveSequenceIndex + 1 < currentMoveSequence.size()) { moveSequenceIndex++; }
+        else { currentMoveSequence.clear(); moveSequenceIndex = 0; }
+      }
+    }
+  }
+
   public void initializeArm() {
     targetPos = realArmPosition();
   }
