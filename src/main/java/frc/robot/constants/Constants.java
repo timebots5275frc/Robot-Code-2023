@@ -268,7 +268,7 @@ public class Constants {
         //(21, -25);
         public static final ArrayList<Vector2> GrabFromStationPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(15 + 7, 10)));
         //(15 + 7, 10);
-        public static final ArrayList<Vector2> PlaceOnGroundPos =new ArrayList<Vector2>(Arrays.asList(new Vector2(21, -25)));
+        public static final ArrayList<Vector2> PlaceOnGroundPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(21, -25)));
         //(21, -25);
         public static final ArrayList<Vector2> PlaceOnSecondPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(22.75 + 7, 13)));
         //(22.75 + 7, 13);

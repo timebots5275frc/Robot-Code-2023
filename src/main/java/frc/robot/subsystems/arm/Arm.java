@@ -322,7 +322,7 @@ public class Arm extends SubsystemBase {
 
         if (o.y < ArmConstants.outsideChassisSmallestY) { o.y = ArmConstants.outsideChassisSmallestY; }
     }
-
+// cock cum suck 4
     if (o.y >= 0 && o.x < armDiff) { o.x = armDiff; } // Above y=0
 
     if (o.magnitude() < armDiff + .5f) { o = o.normalized().times(armDiff + .5f); } // Clamp outside min circle
