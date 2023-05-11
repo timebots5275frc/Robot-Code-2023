@@ -51,10 +51,14 @@ public class Arm extends SubsystemBase {
   private double targetSecondArmAngle;
   private double actualFirstArmAngle;
   private double actualSecondArmAngle;
+  private double targetFirstArmVelocity;
+  private double targetSecondArmVelocity;
   private TwoJointInverseKinematics kinematics;
 
   private ArrayList<Vector2> currentMoveSequence;
   private int moveSequenceIndex;
+  private long lastPeriodicTime = 0;
+  private double deltaTime;
 
   public Arm() {
     firstArmController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -161,6 +165,19 @@ public class Arm extends SubsystemBase {
     secondArmPID.setSmartMotionMaxVelocity(sg_smartMAXVelocity, 1);
     secondArmPID.setSmartMotionMaxAccel(sg_smartMAXAcc, 1);
     secondArmPID.setSmartMotionAllowedClosedLoopError(sg_allowedErr, 1);
+  }
+
+  private void calculateTargetVelocity()
+  {
+    calculateKinematicsAngles();
+    getActualFirstArmAngle();
+    getActualSecondArmAngle();
+
+    double firstArmAngleDiff = targetFirstArmAngle - actualFirstArmAngle;
+    double secondArmAngleDiff = targetSecondArmAngle - actualSecondArmAngle; 
+
+    targetFirstArmVelocity = firstArmAngleDiff / deltaTime;
+    targetSecondArmVelocity = secondArmAngleDiff / deltaTime;
   }
 
   private void calculateKinematicsAngles() {
@@ -272,6 +289,7 @@ public class Arm extends SubsystemBase {
   
   @Override
   public void periodic() {
+    deltaTime = (double)(System.currentTimeMillis() - lastPeriodicTime) / 1000;
 
     Vector2 armPos = realArmPosition();
     double calculatedAngle;
@@ -289,6 +307,7 @@ public class Arm extends SubsystemBase {
     }
 
     LogSmartDashboard(calculatedAngle, adjustedFirstArmAngle);
+    lastPeriodicTime = System.currentTimeMillis();
   }
 
   public Vector2 GetClampedPosValue(Vector2 pos)

@@ -25,7 +25,6 @@ public class SwerveModule {
     private PIDController steerAnglePID;
     private SparkMaxPIDController steerMotorVelocityPID;
     private SparkMaxPIDController driveMotorVelocityPID;
-    private SwerveModulePosition modulePosition = new SwerveModulePosition();
 
     public SwerveModule(int driveMotorID, int steerMotorID, int steerEncoderId) {
 
