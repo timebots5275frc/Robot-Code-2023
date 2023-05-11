@@ -172,7 +172,7 @@ public class Constants {
 
 
 
-        //PID values first arm
+        // PID values first arm
         public static final double f_kP = 0.000;
         public static final double f_kI = 0.000 / 1000.0;
         public static final double f_kD = 0;
@@ -186,7 +186,7 @@ public class Constants {
         public static final double f_allowedErr = 1;
         public static final double f_minVelocity = 0;
 
-        //PID values first arm wih gravity
+        // PID values first arm wih gravity
         public static final double fg_kP = 0;
         public static final double fg_kI = 0;
         public static final double fg_kD = 0;
@@ -199,7 +199,7 @@ public class Constants {
         public static final double fg_allowedErr = 0;
         public static final double fg_smartMAXAcc = 0;
 
-        //PID values first arm against gravity
+        // PID values first arm against gravity
         public static final double s_kP = 0.000;
         public static final double s_kI = 0.000 / 2000;
         public static final double s_kD = 0;
@@ -213,7 +213,7 @@ public class Constants {
         public static final double s_allowedErr = 1;
         public static final double s_minVelocity = 0;
 
-        //PID values second arm with gravity
+        // PID values second arm with gravity
         public static final double sg_kP = 0;
         public static final double sg_kI = 0;
         public static final double sg_kD = 0;
@@ -226,6 +226,8 @@ public class Constants {
         
         //PID loop
         //l
+
+        //Velocity PIDs
 
         // Arm Ground Constraints (Relative to arm mount points in inches)
         public static final Vector2[] ground_Constraints = { 
@@ -271,7 +273,7 @@ public class Constants {
         public static final ArrayList<Vector2> PlaceOnSecondPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(22.75 + 7, 13)));
         //(22.75 + 7, 13);
         public static final ArrayList<Vector2> PlaceOnThirdPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(39.75 + 7, 25)));
-        //(39.75 + 7, 25);
+        // (39.75 + 7, 25);
 
     }
 }
