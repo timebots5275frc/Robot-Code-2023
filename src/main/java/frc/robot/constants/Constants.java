@@ -6,8 +6,6 @@ package frc.robot.constants;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.ejml.dense.block.VectorOps_DDRB;
-
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.math2.Vector2;
 
