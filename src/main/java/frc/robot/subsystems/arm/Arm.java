@@ -15,6 +15,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ArmConstants;
@@ -53,6 +54,8 @@ public class Arm extends SubsystemBase {
   private double actualSecondArmAngle;
   private double targetFirstArmVelocity;
   private double targetSecondArmVelocity;
+  private double loopTime;
+  private double previousTime;
   private TwoJointInverseKinematics kinematics;
 
   private ArrayList<Vector2> currentMoveSequence;
@@ -197,80 +200,91 @@ public class Arm extends SubsystemBase {
     actualSecondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
-  public void getInput(double joystickValue, double joystickValue2, Joystick joy) {
-    checkPresetMoveSequenceButtons(joy);
-    if (currentMoveSequence.size() == 0) { moveTargetWithJoystick(joystickValue, joystickValue2); }
-    else {}
-  }
+  // public void getInput(double joystickValue, double joystickValue2, Joystick joy) {
+  //   checkPresetMoveSequenceButtons(joy);
+  //   if (currentMoveSequence.size() == 0) { moveTargetWithJoystick(joystickValue, joystickValue2); }
+  //   else {}
+  // } 
+  // Move Sequence Code 
 
   public void moveTargetWithJoystick(double joystickValue, double joystickValue2) {
     targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     
-    // Sus Clamping Ahhhhhh
+    // Clamping for point
     Vector2 normalizedVector = GetClampedPosValue(targetPos);
     targetPos = normalizedVector;
   }
 
-  void checkPresetMoveSequenceButtons(Joystick joy)
-  {
-    if (joy.getRawButtonPressed(1)) { setNewMoveSequence(Constants.ArmConstants.ParkingPos); } 
-    else if (joy.getRawButtonPressed(12)) { setNewMoveSequence(Constants.ArmConstants.RestingPos); } 
-    else if (joy.getRawButtonPressed(8)) { setNewMoveSequence(Constants.ArmConstants.GrabFromGroundPos); } 
-    else if (joy.getRawButtonPressed(10)) { setNewMoveSequence(Constants.ArmConstants.GrabFromStationPos);  }
-    else if (joy.getRawButtonPressed(7)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnGroundPos); } 
-    else if (joy.getRawButtonPressed(9)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnSecondPos); } 
-    else if (joy.getRawButtonPressed(11)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnThirdPos); }
-  }
+  // void checkPresetMoveSequenceButtons(Joystick joy)
+  // {
+  //   if (joy.getRawButtonPressed(1)) { setNewMoveSequence(Constants.ArmConstants.ParkingPos); } 
+  //   else if (joy.getRawButtonPressed(12)) { setNewMoveSequence(Constants.ArmConstants.RestingPos); } 
+  //   else if (joy.getRawButtonPressed(8)) { setNewMoveSequence(Constants.ArmConstants.GrabFromGroundPos); } 
+  //   else if (joy.getRawButtonPressed(10)) { setNewMoveSequence(Constants.ArmConstants.GrabFromStationPos);  }
+  //   else if (joy.getRawButtonPressed(7)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnGroundPos); } 
+  //   else if (joy.getRawButtonPressed(9)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnSecondPos); } 
+  //   else if (joy.getRawButtonPressed(11)) { setNewMoveSequence(Constants.ArmConstants.PlaceOnThirdPos); }
+  // }
+  // More move sequence
 
-  void setNewMoveSequence(ArrayList<Vector2> newSequence)
-  {
-    Vector2 armPos = realArmPosition();
-    currentMoveSequence = newSequence;
+  // void setNewMoveSequence(ArrayList<Vector2> newSequence)
+  // {
+  //   Vector2 armPos = realArmPosition();
+  //   currentMoveSequence = newSequence;
 
-    int closestPointIndex = -1;
+  //   int closestPointIndex = -1;
 
-    for (int i = 0; i < currentMoveSequence.size(); i++) {
-      double distanceFromCurrentPoint = Vector2.distance(currentMoveSequence.get(i), armPos);
+  //   for (int i = 0; i < currentMoveSequence.size(); i++) {
+  //     double distanceFromCurrentPoint = Vector2.distance(currentMoveSequence.get(i), armPos);
 
-      if (closestPointIndex == -1 || distanceFromCurrentPoint < Vector2.distance(currentMoveSequence.get(closestPointIndex), armPos))
-      {
-        closestPointIndex = i;
-      }
-    }
+  //     if (closestPointIndex == -1 || distanceFromCurrentPoint < Vector2.distance(currentMoveSequence.get(closestPointIndex), armPos))
+  //     {
+  //       closestPointIndex = i;
+  //     }
+  //   }
 
-    moveSequenceIndex = closestPointIndex;
-  }
+  //   moveSequenceIndex = closestPointIndex;
+  // }
+  // More Move Sequence
 
-  void checkMoveSequence()
-  {
-    if (currentMoveSequence.size() > 0)
-    {
-      Vector2 currentTargetPoint = currentMoveSequence.get(moveSequenceIndex);
-      Vector2 currentArmPos = realArmPosition();
+  // void checkMoveSequence()
+  // {
+  //   if (currentMoveSequence.size() > 0)
+  //   {
+  //     Vector2 currentTargetPoint = currentMoveSequence.get(moveSequenceIndex);
+  //     Vector2 currentArmPos = realArmPosition();
 
-      if (!targetPos.equals(currentTargetPoint)) { changeTargetPos(currentTargetPoint); }
+  //     if (!targetPos.equals(currentTargetPoint)) { changeTargetPos(currentTargetPoint); }
 
-      if (Vector2.distance(currentTargetPoint, currentArmPos) <= ArmConstants.Move_Sequence_Allowed_Error) 
-      {
-        if (moveSequenceIndex + 1 < currentMoveSequence.size()) { moveSequenceIndex++; }
-        else { currentMoveSequence.clear(); moveSequenceIndex = 0; }
-      }
-    }
-  }
+  //     if (Vector2.distance(currentTargetPoint, currentArmPos) <= ArmConstants.Move_Sequence_Allowed_Error) 
+  //     {
+  //       if (moveSequenceIndex + 1 < currentMoveSequence.size()) { moveSequenceIndex++; }
+  //       else { currentMoveSequence.clear(); moveSequenceIndex = 0; }
+  //     }
+  //   }
+  // }
+  // More Move Sequence
 
   public void initializeArm() {
     targetPos = realArmPosition();
   }
 
-  public void moveArm() {
-    calculateKinematicsAngles();
-    moveArm(targetFirstArmAngle, targetSecondArmAngle);
-  }
+  // public void moveArm() {
+  //   calculateKinematicsAngles();
+  //   moveArm(targetFirstArmAngle, targetSecondArmAngle);
+  // }
 
-  public void moveArm(double f_angle, double s_angle) {
-    firstArmPID.setReference(f_angle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
-    secondArmPID.setReference(-s_angle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
+  // public void moveArm(double f_angle, double s_angle) {
+  //   firstArmPID.setReference(f_angle * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
+  //   secondArmPID.setReference(-s_angle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE, CANSparkMax.ControlType.kSmartMotion, 0);
+  // }
+
+  //Old Move Arm
+
+  public void moveArm() {
+    firstArmPID.setReference(targetFirstArmVelocity, CANSparkMax.ControlType.kVelocity);
+    secondArmPID.setReference(targetFirstArmVelocity, CANSparkMax.ControlType.kVelocity);
   }
 
   public void setSparkEncoders() {
@@ -280,16 +294,17 @@ public class Arm extends SubsystemBase {
     secondArmEncoder.setPosition(-actualSecondArmAngle * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE);
   }
 
-  public void changeTargetPos(Vector2 point) {
-    Vector2 clampedPoint =  GetClampedPosValue(point);
-    targetPos = clampedPoint;
-    calculateKinematicsAngles();
-    moveArm(targetFirstArmAngle, targetSecondArmAngle);
-  }
+  // public void changeTargetPos(Vector2 point) {
+  //   Vector2 clampedPoint =  GetClampedPosValue(point);
+  //   targetPos = clampedPoint;
+  //   calculateKinematicsAngles();
+  //   moveArm(targetFirstArmAngle, targetSecondArmAngle);
+  // }
   
   @Override
   public void periodic() {
     deltaTime = (double)(System.currentTimeMillis() - lastPeriodicTime) / 1000;
+    lastPeriodicTime = System.currentTimeMillis();
 
     Vector2 armPos = realArmPosition();
     double calculatedAngle;
@@ -307,7 +322,6 @@ public class Arm extends SubsystemBase {
     }
 
     LogSmartDashboard(calculatedAngle, adjustedFirstArmAngle);
-    lastPeriodicTime = System.currentTimeMillis();
   }
 
   public Vector2 GetClampedPosValue(Vector2 pos)
@@ -351,6 +365,8 @@ public class Arm extends SubsystemBase {
     return (value + offset) / (max + offset);
   }
 
+  // Getting the current arms position
+
   public Vector2 realArmPosition()
   {
     getActualFirstArmAngle();
@@ -362,6 +378,8 @@ public class Arm extends SubsystemBase {
     thisPos.y *= -1;
     return thisPos;
   }
+
+  // Logging values
 
   void LogSmartDashboard(double calculatedAngle, double adjustedFirstArmAngle)
   {
