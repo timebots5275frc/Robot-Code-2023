@@ -84,11 +84,11 @@ public class Arm extends SubsystemBase {
     f_kFF = Constants.ArmConstants.f_kFF;
     f_kMaxOutput = Constants.ArmConstants.f_kMaxOutput;
     f_kMinOutput = Constants.ArmConstants.f_kMinOutput;
-    f_maxRPM = Constants.ArmConstants.f_maxRPM;
-    f_smartMAXVelocity = Constants.ArmConstants.f_smartMAXVelocity;
-    f_smartMAXAcc = Constants.ArmConstants.f_smartMAXAcc;
-    f_allowedErr = Constants.ArmConstants.f_allowedErr;
-    f_minVel = Constants.ArmConstants.f_minVelocity;
+    // f_maxRPM = Constants.ArmConstants.f_maxRPM;
+    // f_smartMAXVelocity = Constants.ArmConstants.f_smartMAXVelocity;
+    // f_smartMAXAcc = Constants.ArmConstants.f_smartMAXAcc;
+    // f_allowedErr = Constants.ArmConstants.f_allowedErr;
+    // f_minVel = Constants.ArmConstants.f_minVelocity;
 
     fg_kP = Constants.ArmConstants.fg_kP;
     fg_kI = Constants.ArmConstants.fg_kI;
@@ -109,11 +109,11 @@ public class Arm extends SubsystemBase {
     s_kFF = Constants.ArmConstants.s_kFF;
     s_kMaxOutput = Constants.ArmConstants.s_kMaxOutput;
     s_kMinOutput = Constants.ArmConstants.s_kMinOutput;
-    s_maxRPM = Constants.ArmConstants.s_maxRPM;
-    s_smartMAXVelocity = Constants.ArmConstants.s_smartMAXVelocity;
-    s_smartMAXAcc = Constants.ArmConstants.s_smartMAXAcc;
-    s_allowedErr = Constants.ArmConstants.s_allowedErr;
-    s_minVel = Constants.ArmConstants.s_minVelocity;
+    // s_maxRPM = Constants.ArmConstants.s_maxRPM;
+    // s_smartMAXVelocity = Constants.ArmConstants.s_smartMAXVelocity;
+    // s_smartMAXAcc = Constants.ArmConstants.s_smartMAXAcc;
+    // s_allowedErr = Constants.ArmConstants.s_allowedErr;
+    // s_minVel = Constants.ArmConstants.s_minVelocity;
 
     sg_kP = Constants.ArmConstants.sg_kP;
     sg_kI = Constants.ArmConstants.sg_kI;
@@ -133,10 +133,10 @@ public class Arm extends SubsystemBase {
     firstArmPID.setIZone(f_kIz, 0);
     firstArmPID.setFF(f_kFF, 0);
     firstArmPID.setOutputRange(f_kMinOutput, f_kMaxOutput, 0);
-    firstArmPID.setSmartMotionMaxVelocity(f_smartMAXVelocity, 0);
-    firstArmPID.setSmartMotionMaxAccel(f_smartMAXAcc, 0);
-    firstArmPID.setSmartMotionAllowedClosedLoopError(f_allowedErr, 0);
-    firstArmPID.setSmartMotionMinOutputVelocity(f_minVel, 0);
+    // firstArmPID.setSmartMotionMaxVelocity(f_smartMAXVelocity, 0);
+    // firstArmPID.setSmartMotionMaxAccel(f_smartMAXAcc, 0);
+    // firstArmPID.setSmartMotionAllowedClosedLoopError(f_allowedErr, 0);
+    // firstArmPID.setSmartMotionMinOutputVelocity(f_minVel, 0);
 
     firstArmPID.setP(fg_kP, 1);
     firstArmPID.setI(fg_kI, 1);
@@ -154,10 +154,10 @@ public class Arm extends SubsystemBase {
     secondArmPID.setIZone(s_kIz, 0);
     secondArmPID.setFF(s_kFF, 0);
     secondArmPID.setOutputRange(s_kMinOutput, s_kMaxOutput, 0);
-    secondArmPID.setSmartMotionMaxVelocity(s_smartMAXVelocity, 0);
-    secondArmPID.setSmartMotionMaxAccel(s_smartMAXAcc, 0);
-    secondArmPID.setSmartMotionAllowedClosedLoopError(s_allowedErr, 0);
-    secondArmPID.setSmartMotionMinOutputVelocity(s_minVel, 0);
+    // secondArmPID.setSmartMotionMaxVelocity(s_smartMAXVelocity, 0);
+    // secondArmPID.setSmartMotionMaxAccel(s_smartMAXAcc, 0);
+    // secondArmPID.setSmartMotionAllowedClosedLoopError(s_allowedErr, 0);
+    // secondArmPID.setSmartMotionMinOutputVelocity(s_minVel, 0);
 
     secondArmPID.setP(sg_kP, 1);
     secondArmPID.setI(sg_kI, 1);
@@ -322,6 +322,7 @@ public class Arm extends SubsystemBase {
     }
 
     LogSmartDashboard(calculatedAngle, adjustedFirstArmAngle);
+
   }
 
   public Vector2 GetClampedPosValue(Vector2 pos)
@@ -401,5 +402,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Second Arm output current", secondArmController.getOutputCurrent());
     SmartDashboard.putNumber("First Arm Current Rotations", firstArmEncoder.getPosition());
     SmartDashboard.putNumber("Second Arm Current Rotations", secondArmEncoder.getPosition());
+    SmartDashboard.putNumber("First Arm Motor Speed", firstArmEncoder.getVelocity());
+    SmartDashboard.putNumber("First Arm Motor Speed", secondArmEncoder.getVelocity());
   }
 }

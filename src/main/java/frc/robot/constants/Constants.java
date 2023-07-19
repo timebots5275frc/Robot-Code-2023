@@ -174,7 +174,7 @@ public class Constants {
 
         // PID values first arm
         public static final double f_kP = 0.000;
-        public static final double f_kI = 0.000 / 1000.0;
+        public static final double f_kI = 0.000;
         public static final double f_kD = 0;
         public static final double f_kIz = 0;
         public static final double f_kFF = 0.02;
