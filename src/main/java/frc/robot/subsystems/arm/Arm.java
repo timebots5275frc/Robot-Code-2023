@@ -404,5 +404,8 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Second Arm Current Rotations", secondArmEncoder.getPosition());
     SmartDashboard.putNumber("First Arm Motor Speed", firstArmEncoder.getVelocity());
     SmartDashboard.putNumber("First Arm Motor Speed", secondArmEncoder.getVelocity());
+    SmartDashboard.putNumber("First Arm Target Velocity", targetFirstArmVelocity);
+    SmartDashboard.putNumber("Second Arm Target Velocity", targetSecondArmVelocity);
+
   }
 }

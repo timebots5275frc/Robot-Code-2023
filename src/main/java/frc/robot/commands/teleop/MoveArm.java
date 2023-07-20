@@ -49,6 +49,7 @@ public class MoveArm extends CommandBase {
   @Override
   public void execute() {
       arm.moveArm();
+      arm.moveTargetWithJoystick(secondAngle, firstAngle);
   }
 
   // Called once the command ends or is interrupted.
