@@ -54,12 +54,16 @@ public class Arm extends SubsystemBase {
   private double actualSecondArmAngle;
   private double targetFirstArmVelocity;
   private double targetSecondArmVelocity;
-  private double loopTime;
-  private double previousTime;
+  private double convertDPStoRPMf;
+  private double convertDPStoRPMs;
+  // private double loopTime;
+  // private double previousTime;
   private TwoJointInverseKinematics kinematics;
+  double firstArmAngleDiff;
+  double secondArmAngleDiff;
 
-  private ArrayList<Vector2> currentMoveSequence;
-  private int moveSequenceIndex;
+  // private ArrayList<Vector2> currentMoveSequence;
+  // private int moveSequenceIndex;
   private long lastPeriodicTime = 0;
   private double deltaTime;
 
@@ -75,6 +79,8 @@ public class Arm extends SubsystemBase {
     secondArmCANCoder = new CANCoder(Constants.ArmConstants.SECOND_ARM_CANCODER_ID);
     firstArmEncoder.setPositionConversionFactor(1);
     secondArmEncoder.setPositionConversionFactor(1);
+    firstArmAngleDiff = 0;
+    secondArmAngleDiff = 0;
 
     //PID Values
     f_kP = Constants.ArmConstants.f_kP;
@@ -176,11 +182,13 @@ public class Arm extends SubsystemBase {
     getActualFirstArmAngle();
     getActualSecondArmAngle();
 
-    double firstArmAngleDiff = targetFirstArmAngle - actualFirstArmAngle;
-    double secondArmAngleDiff = targetSecondArmAngle - actualSecondArmAngle; 
+    firstArmAngleDiff = targetFirstArmAngle - actualFirstArmAngle;
+    secondArmAngleDiff = targetSecondArmAngle - actualSecondArmAngle; 
 
-    targetFirstArmVelocity = firstArmAngleDiff / deltaTime;
-    targetSecondArmVelocity = secondArmAngleDiff / deltaTime;
+    convertDPStoRPMf = ((firstArmAngleDiff * Constants.ArmConstants.FIRST_ARM_ROTATIONS_PER_DEGREE) * 60) / deltaTime;
+
+    convertDPStoRPMs = ((secondArmAngleDiff * Constants.ArmConstants.SECOND_ARM_ROTATIONS_PER_DEGREE) / deltaTime) * 60;
+
   }
 
   private void calculateKinematicsAngles() {
@@ -214,6 +222,7 @@ public class Arm extends SubsystemBase {
     // Clamping for point
     Vector2 normalizedVector = GetClampedPosValue(targetPos);
     targetPos = normalizedVector;
+    calculateTargetVelocity();
   }
 
   // void checkPresetMoveSequenceButtons(Joystick joy)
@@ -283,8 +292,8 @@ public class Arm extends SubsystemBase {
   //Old Move Arm
 
   public void moveArm() {
-    firstArmPID.setReference(targetFirstArmVelocity, CANSparkMax.ControlType.kVelocity);
-    secondArmPID.setReference(targetFirstArmVelocity, CANSparkMax.ControlType.kVelocity);
+    firstArmPID.setReference(convertDPStoRPMf, CANSparkMax.ControlType.kVelocity);
+    secondArmPID.setReference(convertDPStoRPMs, CANSparkMax.ControlType.kVelocity);
   }
 
   public void setSparkEncoders() {
@@ -403,9 +412,11 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("First Arm Current Rotations", firstArmEncoder.getPosition());
     SmartDashboard.putNumber("Second Arm Current Rotations", secondArmEncoder.getPosition());
     SmartDashboard.putNumber("First Arm Motor Speed", firstArmEncoder.getVelocity());
-    SmartDashboard.putNumber("First Arm Motor Speed", secondArmEncoder.getVelocity());
-    SmartDashboard.putNumber("First Arm Target Velocity", targetFirstArmVelocity);
-    SmartDashboard.putNumber("Second Arm Target Velocity", targetSecondArmVelocity);
+    SmartDashboard.putNumber("Second Arm Motor Speed", secondArmEncoder.getVelocity());
+    SmartDashboard.putNumber("First Arm Target Velocity", convertDPStoRPMf);
+    SmartDashboard.putNumber("Second Arm Target Velocity", convertDPStoRPMs);
+    SmartDashboard.putNumber("First Arm Angle Diff", firstArmAngleDiff);
+    SmartDashboard.putNumber("Second Arm Angle Diff", secondArmAngleDiff);
 
   }
 }

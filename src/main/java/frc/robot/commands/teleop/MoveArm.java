@@ -48,8 +48,9 @@ public class MoveArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      arm.moveTargetWithJoystick(joystick.getX(), joystick.getY());
       arm.moveArm();
-      arm.moveTargetWithJoystick(secondAngle, firstAngle);
+
   }
 
   // Called once the command ends or is interrupted.
