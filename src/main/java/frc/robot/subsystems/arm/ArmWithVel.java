@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.math2.Vector2;
 
 public class ArmWithVel extends SubsystemBase {
   /** Creates a new ArmWithVel. */
@@ -29,7 +30,11 @@ public class ArmWithVel extends SubsystemBase {
   private CANCoder secondArmCANCoder;
   private double backLimit;
   private double frontLimit;
-  private double firstArmPos;
+
+  private Vector2 ArmPointPosition;
+  private Vector2 theoPos;
+  private double firstArmAngle;
+  private double secondArmAngle;
 
   // private double f_kP, f_kI, f_kD, f_kIz, f_kFF, f_maxOutput, f_minInput;
 
@@ -40,6 +45,8 @@ public class ArmWithVel extends SubsystemBase {
 
   private double s_kP, s_kI, s_kD, s_kIz, s_kFF, s_kMaxOutput, s_kMinOutput, s_maxRPM, s_smartMAXVelocity,
   s_smartMAXAcc, s_allowedErr, s_minVel;
+
+  
 
   public ArmWithVel() {
     firstArmMotorController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -144,21 +151,26 @@ public class ArmWithVel extends SubsystemBase {
   //   }
   // }
 
+
   public void moveFirstArm(Joystick joy) {
     firstArmPID.setReference(joy.getY() * Constants.ArmConstants.velFactor, ControlType.kVelocity);
   }
   public void moveSecondArm(Joystick joy) {
-    secondArmPID.setReference(joy.getX() * Constants.ArmConstants.velFactor, ControlType.kVelocity);
+    secondArmPID.setReference(-joy.getX() * Constants.ArmConstants.velFactor, ControlType.kVelocity);
   }
   public void moveArms(Joystick joy) {
-    firstArmPID.setReference(joy.getY() * Constants.ArmConstants.velFactor, ControlType.kVelocity);
-    secondArmPID.setReference(joy.getX() * Constants.ArmConstants.velFactor, ControlType.kVelocity);
+    moveFirstArm(joy);
+    moveSecondArm(joy);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    firstArmPos = firstArmCANCoder.getAbsolutePosition();
-    SmartDashboard.putNumber("FA_OutputCurrent", firstArmMotorController.getOutputCurrent());
+    if (firstArmCANCoder.getAbsolutePosition() > -60 && firstArmCANCoder.getAbsolutePosition() <= 180) {
+      firstArmAngle = firstArmCANCoder.getAbsolutePosition();
+    } else {
+      firstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;/*-firstAngle + ((180 + firstAngle) * 2); */
+    }
+    secondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 }
