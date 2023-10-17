@@ -10,6 +10,7 @@ import org.ejml.dense.block.VectorOps_DDRB;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.math2.Vector2;
+//Poop fart balls 9000 lapoptmksn
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -113,7 +114,7 @@ public class Constants {
 
     public static final class AutoConstants {
         // Movement
-        public static final double MAX_Speed_MetersPerSecond = 1.4;
+        public static final double MAX_Speed_MetersPerSecond = 1.2;
         public static final double MAX_Speed_MetersPerSecond2 = 0.6;
         public static final double MAX_Acceleration_MetersPerSecondSquared = 0.6;
 
@@ -137,7 +138,7 @@ public class Constants {
         public static final int SECOND_ARM_CANCODER_ID = 31;
         public static final double ARM_FIRST_PART_LENGTH = 18;
         public static final double ARM_SECOND_PART_LENGTH = 34.5;
-        public static final double POINT_MOVEMENT_FACTOR = 0.02 /* Inch per second */ * 6;
+        public static final double POINT_MOVEMENT_FACTOR = 0.02 /* Inch per second */ * 12;
         public static final double ARM_FIRST_PART_LIMIT = 0;
         public static final double ARM_SECOND_PART_LIMIT = 0;
         public static final double RAD_TO_DEG_RATIO = 180 / Math.PI;
