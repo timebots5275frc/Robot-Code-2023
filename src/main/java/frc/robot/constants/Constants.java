@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.constants;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -260,21 +261,24 @@ public class Constants {
         public static final double outsideChassisSmallestY = -31; // On chart: 4, 5
         public static final double FARTHEST_EXTENSION_POINT = 46;
 
+        private MovePoint one = new MovePoint(new Vector2(12, -20.5), "Resting Pos");
 
-        public static final ArrayList<Vector2> ParkingPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(0, 0)));
+        private MovePoint two = new MovePoint(new Vector2(21, -25), "Ground");
 
-        public static final ArrayList<Vector2> RestingPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(12, -20.5)));
-        //(12 , -20.5));
-        public static final ArrayList<Vector2> GrabFromGroundPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(21, -25)));
-        //(21, -25);
-        public static final ArrayList<Vector2> GrabFromStationPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(15 + 7, 10)));
-        //(15 + 7, 10);
-        public static final ArrayList<Vector2> PlaceOnGroundPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(21, -25)));
-        //(21, -25);
-        public static final ArrayList<Vector2> PlaceOnSecondPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(22.75 + 7, 13)));
-        //(22.75 + 7, 13);
-        public static final ArrayList<Vector2> PlaceOnThirdPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(39.75 + 7, 25)));
-        //(39.75 + 7, 25);
+        private MovePoint three = new MovePoint(new Vector2(22.75 + 7, 13), "Second row Position");
+
+        public ArrayList<MovePoint> pointList = new ArrayList<MovePoint>(Arrays.asList(one, two, three));
+
+        // public static final ArrayList<Vector2> GrabFromGroundPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(21, -25)));
+        // //(21, -25);
+        // public static final ArrayList<Vector2> GrabFromStationPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(15 + 7, 10)));
+        // //(15 + 7, 10);
+        // public static final ArrayList<Vector2> PlaceOnGroundPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(21, -25)));
+        // //(21, -25);
+        // public static final ArrayList<Vector2> PlaceOnSecondPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(22.75 + 7, 13)));
+        // //(22.75 + 7, 13);
+        // public static final ArrayList<Vector2> PlaceOnThirdPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(39.75 + 7, 25)));
+        // // (39.75 + 7, 25);
 
     }
 }
