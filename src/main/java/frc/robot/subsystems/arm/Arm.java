@@ -189,52 +189,8 @@ public class Arm extends SubsystemBase {
     actualSecondArmAngle = secondArmCANCoder.getAbsolutePosition();
   }
 
-  public void moveTargetPoint(double joystickValue, double joystickValue2, Joystick joy, ArrayList<Vector2> parkingPos, ArrayList<Vector2> restingPos, ArrayList<Vector2> groundPickup, ArrayList<Vector2> stationPickup, ArrayList<Vector2> groundDrop, ArrayList<Vector2> secondDrop, ArrayList<Vector2> thirdDrop) {
-    //if (!moveSequence.isEmpty()) { moveSequence.clear(); }
-
-    if (joy.getRawButtonPressed(1)) {
-      Vector2 comparablePose = realArmPosition();
-      double smallestDistance = Math.abs(Vector2.distance(comparablePose, parkingPos.get((parkingPos.size() - 1))));
-      for (int i = 0; i < parkingPos.size(); i++) {
-        if (Math.abs(Vector2.distance(comparablePose, parkingPos.get(i))) < smallestDistance) {
-          smallestDistance = Math.abs(Vector2.distance(comparablePose, parkingPos.get(i)));
-        }
-      }
-      
-
-    } else if (joy.getRawButtonPressed(12)) {
-      // Vector2 normalizedVector = GetClampedPosValue(restingPos);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(8)) {
-      // Vector2 normalizedVector = GetClampedPosValue(groundPickup);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(10)) {
-      // Vector2 normalizedVector = GetClampedPosValue(stationPickup);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(7)) {
-      // Vector2 normalizedVector = GetClampedPosValue(groundDrop);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(9)) {
-      // Vector2 normalizedVector = GetClampedPosValue(secondDrop);
-      // targetPos = normalizedVector;
-    } else if (joy.getRawButtonPressed(11)) {
-      // Vector2 normalizedVector = GetClampedPosValue(thirdDrop);
-      // targetPos = normalizedVector;
-    } else {
-    targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    
-    
-    // Sus Clamping Ahhhhhh
-    Vector2 normalizedVector = GetClampedPosValue(targetPos);
-    targetPos = normalizedVector;
-    }
-  }
-
   public void initializeArm() {
     targetPos = realArmPosition();
-
-     
   }
 
   public void moveArm() {
@@ -272,7 +228,6 @@ public class Arm extends SubsystemBase {
     } else {
       calculatedAngle = -firstArmCANCoder.getAbsolutePosition() + ((180 + firstArmCANCoder.getAbsolutePosition()) * 2);
     }
-    if (!moveSequence.isEmpty()) { checkMoveSequence(); }
     double adjustedFirstArmAngle;
     if (firstArmCANCoder.getAbsolutePosition() > -60 && firstArmCANCoder.getAbsolutePosition() <= 180) {
       adjustedFirstArmAngle = firstArmCANCoder.getAbsolutePosition();
@@ -356,22 +311,6 @@ public class Arm extends SubsystemBase {
     }
 
     changeTargetPos(moveSequence.get(0));
-  }
-
-  private void checkMoveSequence()
-  {
-    Vector2 armPos = realArmPosition();
-
-    if (Vector2.distance(armPos, moveSequence.get(0)) <= ArmConstants.Move_Sequence_Allowed_Error)
-    {
-      moveSequence.remove(0);
-
-      if (!moveSequence.isEmpty())
-      {
-        Vector2 nextPoint = moveSequence.get(0);
-        changeTargetPos(nextPoint);
-      }
-    }
   }
 
   public Vector2 realArmPosition()
