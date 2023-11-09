@@ -55,10 +55,6 @@ public class Arm extends SubsystemBase {
   private double actualSecondArmAngle;
   private TwoJointInverseKinematics kinematics;
 
-
-
-  private List<Vector2> moveSequence;
-
   public Arm() {
     firstArmController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
     secondArmController = new CANSparkMax(Constants.ArmConstants.SECOND_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -166,8 +162,6 @@ public class Arm extends SubsystemBase {
     secondArmPID.setSmartMotionMaxAccel(sg_smartMAXAcc, 1);
     secondArmPID.setSmartMotionAllowedClosedLoopError(sg_allowedErr, 1);
 
-    moveSequence = new ArrayList<Vector2>();
-
     //Logging yippee
     over = true;
   }
@@ -183,6 +177,15 @@ public class Arm extends SubsystemBase {
   } else {
        actualFirstArmAngle = firstArmCANCoder.getAbsolutePosition() + 360;/*-firstAngle + ((180 + firstAngle) * 2); */
   }
+  }
+
+  public void moveTargetWithJoystick(double joystickValue, double joystickValue2) {
+    targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    
+    // Clamping for point
+    Vector2 normalizedVector = GetClampedPosValue(targetPos);
+    targetPos = normalizedVector;
   }
 
   private void getActualSecondArmAngle() {
@@ -296,21 +299,6 @@ public class Arm extends SubsystemBase {
   public double PercentBetweenNumbers(double value, double min, double max) {
     double offset = 0 - min;
     return (value + offset) / (max + offset);
-  }
-
-  public void goToPoint(Vector2 pointToGoTo) // for creating move sequence
-  {
-    Vector2 armPos = realArmPosition();
-    double inchesBetweenPoints = Vector2.distance(armPos, pointToGoTo);
-    int totalPoints = (int)Math.ceil(inchesBetweenPoints * ArmConstants.Move_Points_Per_Inch);
-    moveSequence.clear();
-
-    for (int i = 0; i <= totalPoints; i++)
-    {
-      moveSequence.add(GetClampedPosValue(Vector2.lerp(armPos, pointToGoTo, i / (double)totalPoints)));
-    }
-
-    changeTargetPos(moveSequence.get(0));
   }
 
   public Vector2 realArmPosition()
