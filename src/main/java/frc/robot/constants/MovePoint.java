@@ -9,4 +9,10 @@ public class MovePoint {
         point = p;
         pointName = pn;
     }
+    public Vector2 getPoint() {
+        return point;
+    }
+    public String getName() {
+        return pointName;
+    }
 }

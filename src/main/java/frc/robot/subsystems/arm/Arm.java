@@ -12,11 +12,14 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.MovePoint;
 import frc.robot.constants.Constants.ArmConstants;
 import frc.robot.math2.Vector2;
 
@@ -54,8 +57,10 @@ public class Arm extends SubsystemBase {
   private double actualFirstArmAngle;
   private double actualSecondArmAngle;
   private TwoJointInverseKinematics kinematics;
+  private Joystick joystick;
+  private Pair<MovePoint, Double> closestMovePoint;
 
-  public Arm() {
+  public Arm(Joystick joystick) {
     firstArmController = new CANSparkMax(Constants.ArmConstants.FIRST_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
     secondArmController = new CANSparkMax(Constants.ArmConstants.SECOND_ARM_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
     firstArmEncoder = firstArmController.getEncoder();
@@ -67,6 +72,7 @@ public class Arm extends SubsystemBase {
     secondArmCANCoder = new CANCoder(Constants.ArmConstants.SECOND_ARM_CANCODER_ID);
     firstArmEncoder.setPositionConversionFactor(1);
     secondArmEncoder.setPositionConversionFactor(1);
+    this.joystick = joystick;
 
 
     //PID Values
@@ -219,6 +225,36 @@ public class Arm extends SubsystemBase {
     calculateKinematicsAngles();
     moveArm(targetFirstArmAngle, targetSecondArmAngle);
   }
+
+  public int pollButtons() {
+    if (joystick.getRawButtonPressed(7)) {
+      return 7;
+    } else if (joystick.getRawButtonPressed(8)) {
+      return 8;
+    } else if (joystick.getRawButtonPressed(9)) {
+      return 9;
+    } else {
+      return -1;
+    }
+  }
+
+  public double testDistance(MovePoint testPoint) {
+    return Vector2.distance(realArmPosition(), testPoint.getPoint());
+  }
+
+  public Pair<MovePoint, Double> closestPoint() {
+    Double smallestDist = 999.0;
+    Double curDist = 0.0;
+    int ind = 0;
+    for (int i = 0; i < Constants.ArmConstants.pointList.size(); i++) {
+      curDist = testDistance(Constants.ArmConstants.pointList.get(i));
+      if (curDist < smallestDist) {
+        smallestDist = curDist;
+        ind = i;
+      }
+    }
+    return new Pair<MovePoint, Double>(Constants.ArmConstants.pointList.get(ind), smallestDist);    
+  }
   
 //amonmg 
   @Override
@@ -258,6 +294,9 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("First Arm Current Rotations", firstArmEncoder.getPosition());
     SmartDashboard.putNumber("Second Arm Current Rotations", secondArmEncoder.getPosition());
 
+    closestMovePoint = closestPoint();
+
+    SmartDashboard.putString("Closest Point", closestMovePoint.getFirst().getName() + closestMovePoint.getSecond());
   }
 
   public Vector2 GetClampedPosValue(Vector2 pos)

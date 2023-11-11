@@ -38,15 +38,15 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class RobotContainer {
 
-  // Subsystems
-  Drivetrain drivetrain = new Drivetrain();
-  Arm arm = new Arm();
-  Claw claw = new Claw();
-  //ArmWithVel armWithVel = new ArmWithVel();
-
   //Joystic
   Joystick driveJoystick = new Joystick(0);
   Joystick armJoystick = new Joystick(1);
+
+  // Subsystems
+  Drivetrain drivetrain = new Drivetrain();
+  Arm arm = new Arm(armJoystick);
+  Claw claw = new Claw();
+  //ArmWithVel armWithVel = new ArmWithVel()
 
   //Comands
   ResetGyro resetGyro = new ResetGyro(drivetrain);

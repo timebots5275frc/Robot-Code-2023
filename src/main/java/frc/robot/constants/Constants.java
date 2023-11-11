@@ -261,13 +261,13 @@ public class Constants {
         public static final double outsideChassisSmallestY = -31; // On chart: 4, 5
         public static final double FARTHEST_EXTENSION_POINT = 46;
 
-        private MovePoint one = new MovePoint(new Vector2(12, -20.5), "Resting Pos");
+        public static final MovePoint one = new MovePoint(new Vector2(12, -20.5), "Resting Pos");
 
-        private MovePoint two = new MovePoint(new Vector2(21, -25), "Ground");
+        public static final MovePoint two = new MovePoint(new Vector2(38, -26), "Ground");
 
-        private MovePoint three = new MovePoint(new Vector2(22.75 + 7, 13), "Second row Position");
+        public static final MovePoint three = new MovePoint(new Vector2(22.75 + 7, 13), "Second row Position");
 
-        public ArrayList<MovePoint> pointList = new ArrayList<MovePoint>(Arrays.asList(one, two, three));
+        public static final ArrayList<MovePoint> pointList = new ArrayList<MovePoint>(Arrays.asList(one, two, three));
 
         // public static final ArrayList<Vector2> GrabFromGroundPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(21, -25)));
         // //(21, -25);
@@ -279,6 +279,8 @@ public class Constants {
         // //(22.75 + 7, 13);
         // public static final ArrayList<Vector2> PlaceOnThirdPos = new ArrayList<Vector2>(Arrays.asList(new Vector2(39.75 + 7, 25)));
         // // (39.75 + 7, 25);
+
+        public static final double moveDist = 5;
 
     }
 }
