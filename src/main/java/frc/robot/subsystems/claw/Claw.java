@@ -23,18 +23,14 @@ public class Claw extends SubsystemBase {
     pcm = new PneumaticsControlModule(0);
     airCompressor = new Compressor(pcm.getModuleNumber(), PneumaticsModuleType.CTREPCM);
     test = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
-    test2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
     airCompressor.enableDigital();
   }
 
   public void moveSolenoid() {
     test.set(Value.kForward);
-    test2.set(Value.kForward);
   }
   public void resetSolenoid() {
     test.set(Value.kReverse);
-    test2.set(Value.kReverse);
-
   }
 
 
