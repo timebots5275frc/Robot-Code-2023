@@ -179,7 +179,7 @@ public class Arm extends SubsystemBase {
   }
   }
 
-  public void moveTargetWithJoystick(double joystickValue, double joystickValue2) {
+  public void moveTargetPoint(double joystickValue, double joystickValue2) {
     targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
     
