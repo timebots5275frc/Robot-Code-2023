@@ -186,8 +186,10 @@ public class Arm extends SubsystemBase {
   }
 
   public void moveTargetPoint(double joystickValue, double joystickValue2) {
-    targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
-    targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    if(Math.abs(joystickValue) > 0.1 || Math.abs(joystickValue2) > 0.1) {
+      targetPos.x += joystickValue * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+      targetPos.y += -joystickValue2 * Constants.ArmConstants.POINT_MOVEMENT_FACTOR;
+    }
     
     // Clamping for point
     Vector2 normalizedVector = GetClampedPosValue(targetPos);
@@ -229,25 +231,26 @@ public class Arm extends SubsystemBase {
   public int pollButtons() {
     if (joystick.getRawButtonPressed(7)) {
       return 7;
-    } else if (joystick.getRawButtonPressed(8)) {
-      return 8;
-    } else if (joystick.getRawButtonPressed(9)) {
-      return 9;
-    } else {
-      return -1;
     }
-  }
+    if (joystick.getRawButtonPressed(8)) {
+      return 8;
+    }
+    if (joystick.getRawButtonPressed(9)) {
+      return 9;
+    }
+    return -1;
+  } // Polling position buttons
 
-  public double testDistance(MovePoint testPoint) {
-    return Vector2.distance(realArmPosition(), testPoint.getPoint());
-  }
+  public double getDistanceToMovePoint(MovePoint testPoint) {
+    return Math.abs(testPoint.getPoint() - realArmPosition().y);
+  } // Getting the distance from current pos and movepoint pos
 
   public Pair<MovePoint, Double> closestPoint() {
     Double smallestDist = 999.0;
     Double curDist = 0.0;
     int ind = 0;
     for (int i = 0; i < Constants.ArmConstants.pointList.size(); i++) {
-      curDist = testDistance(Constants.ArmConstants.pointList.get(i));
+      curDist = getDistanceToMovePoint(Constants.ArmConstants.pointList.get(i));
       if (curDist < smallestDist) {
         smallestDist = curDist;
         ind = i;
@@ -296,7 +299,7 @@ public class Arm extends SubsystemBase {
 
     closestMovePoint = closestPoint();
 
-    SmartDashboard.putString("Closest Point", closestMovePoint.getFirst().getName() + closestMovePoint.getSecond());
+    SmartDashboard.putString("Closest Point", closestMovePoint.getFirst().getName() + " " + closestMovePoint.getSecond());
   }
 
   public Vector2 GetClampedPosValue(Vector2 pos)
